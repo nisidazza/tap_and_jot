@@ -14,8 +14,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Quotes>? quotes = [];
-  var randomQuote = '';
+  String randomQuote = '';
   bool isLoaded = false;
+  bool shouldDisplay = false;
 
   @override
   void initState() {
@@ -32,23 +33,43 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         isLoaded = true;
         quotes = (jsonData.map((res) => Quotes.fromJson(res)).toList());
-        randomQuote = quotes!.isNotEmpty
-            ? quotes![Random().nextInt(quotes!.length)].text
-            : "";
       });
     } else {
       throw Exception("Failed to load answer");
     }
   }
 
+  void showQuoteOnTap() {
+    setState(() {
+      shouldDisplay = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    randomQuote = quotes!.isNotEmpty
+        ? quotes![Random().nextInt(quotes!.length)].text
+        : "";
     return Scaffold(
         appBar: AppBar(
           title: const Text('Your reading'),
         ),
         body: isLoaded && quotes != null
-            ? SafeArea(child: Center(child: Text(randomQuote)))
+            ? SafeArea(
+                child: Center(
+                    child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(shouldDisplay ? randomQuote : ""),
+                    const SizedBox(height: 30),
+                    ElevatedButton(
+                        onPressed: showQuoteOnTap,
+                        child: const Text('Tap and jot'))
+                  ],
+                ),
+              )))
             : const Center(child: CircularProgressIndicator()));
   }
 }
