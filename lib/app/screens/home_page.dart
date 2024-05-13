@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:jiggle_and_jot/app/data/backup_data.dart';
 import 'package:jiggle_and_jot/app/models/api_model.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,27 +14,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Quotes>? quotes = [];
-  String randomQuote = '';
-  bool isLoaded = false;
   bool shouldDisplay = false;
+  late final Future myFuture;
 
   @override
   void initState() {
     super.initState();
-    loadQuotes();
+    myFuture = fetchQuotes();
   }
 
-  Future<void> loadQuotes() async {
+  Future<List<Quotes>> fetchQuotes() async {
     var client = http.Client();
     var uri = Uri.parse("https://type.fit/api/quotes");
     final response = await client.get(uri);
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body);
-      setState(() {
-        isLoaded = true;
-        quotes = (jsonData.map((res) => Quotes.fromJson(res)).toList());
-      });
+      return jsonData.map((res) => Quotes.fromJson(res)).toList();
     } else {
       throw Exception("Failed to load answer");
     }
@@ -47,29 +43,47 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    randomQuote = quotes!.isNotEmpty
-        ? quotes![Random().nextInt(quotes!.length)].text
-        : "";
     return Scaffold(
         appBar: AppBar(
           title: const Text('Your reading'),
         ),
-        body: isLoaded && quotes != null
-            ? SafeArea(
-                child: Center(
-                    child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(shouldDisplay ? randomQuote : ""),
-                    const SizedBox(height: 30),
-                    ElevatedButton(
-                        onPressed: showQuoteOnTap,
-                        child: const Text('Tap and jot'))
-                  ],
-                ),
-              )))
-            : const Center(child: CircularProgressIndicator()));
+        body: FutureBuilder(
+            future: myFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasError) {
+                final backupQuote =
+                    backupQuotes[Random().nextInt(backupQuotes.length)].text;
+                return loadQuote(backupQuote);
+              } else if (snapshot.hasData) {
+                final quote = snapshot
+                    .data![Random().nextInt(snapshot.data!.length)].text;
+                return loadQuote(quote);
+              } else {
+                return const Center(
+                  child: Text('No data available'),
+                );
+              }
+            }));
+  }
+
+  SafeArea loadQuote(String quotes) {
+    return SafeArea(
+        child: Center(
+            child: Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(shouldDisplay ? quotes : ""),
+          const SizedBox(height: 30),
+          ElevatedButton(
+              onPressed: showQuoteOnTap, child: const Text('Tap and jot'))
+        ],
+      ),
+    )));
   }
 }
