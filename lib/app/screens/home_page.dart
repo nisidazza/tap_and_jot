@@ -43,47 +43,41 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Your reading'),
-        ),
-        body: FutureBuilder(
-            future: myFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (snapshot.hasError) {
-                final backupQuote =
-                    backupQuotes[Random().nextInt(backupQuotes.length)].text;
-                return loadQuote(backupQuote);
-              } else if (snapshot.hasData) {
-                final quote = snapshot
-                    .data![Random().nextInt(snapshot.data!.length)].text;
-                return loadQuote(quote);
-              } else {
-                return const Center(
-                  child: Text('No data available'),
-                );
-              }
-            }));
+    return GestureDetector(
+      onTap: showQuoteOnTap,
+      child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Your reading'),
+          ),
+          body: FutureBuilder(
+              future: myFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  final backupQuote =
+                      backupQuotes[Random().nextInt(backupQuotes.length)].text;
+                  return loadQuote(backupQuote);
+                } else if (snapshot.hasData) {
+                  final quote = snapshot
+                      .data![Random().nextInt(snapshot.data!.length)].text;
+                  return loadQuote(quote);
+                } else {
+                  return const Center(
+                    child: Text('No data available'),
+                  );
+                }
+              })),
+    );
   }
 
   SafeArea loadQuote(String quotes) {
     return SafeArea(
         child: Center(
             child: Padding(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(shouldDisplay ? quotes : ""),
-          const SizedBox(height: 30),
-          ElevatedButton(
-              onPressed: showQuoteOnTap, child: const Text('Tap and jot'))
-        ],
-      ),
-    )));
+                padding: const EdgeInsets.all(10),
+                child: Text(shouldDisplay ? quotes : ""))));
   }
 }
