@@ -73,11 +73,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  SafeArea loadQuote(String quotes) {
+  SafeArea loadQuote(String quote) {
     return SafeArea(
         child: Center(
             child: Padding(
                 padding: const EdgeInsets.all(10),
-                child: Text(shouldDisplay ? quotes : ""))));
+                child: Text(shouldDisplay ? quote : ""))));
   }
 }
