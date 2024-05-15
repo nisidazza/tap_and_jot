@@ -16,11 +16,27 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool shouldDisplay = false;
   late final Future myFuture;
+  String morningImg = 'assets/morning.jpg';
+  String afternoonImg = 'assets/afternoon.jpg';
+  String nightImg = 'assets/night.jpg';
+  late String image;
 
   @override
   void initState() {
     super.initState();
     myFuture = fetchQuotes();
+  }
+
+  String getImage() {
+    var hour = DateTime.now().hour;
+    if (hour < 12) {
+      image = morningImg;
+    } else if (hour < 17) {
+      image = afternoonImg;
+    } else {
+      image = nightImg;
+    }
+    return image;
   }
 
   Future<List<Quotes>> fetchQuotes() async {
@@ -49,27 +65,35 @@ class _HomePageState extends State<HomePage> {
           appBar: AppBar(
             title: const Text('Your reading'),
           ),
-          body: FutureBuilder(
-              future: myFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  final backupQuote =
-                      backupQuotes[Random().nextInt(backupQuotes.length)].text;
-                  return loadQuote(backupQuote);
-                } else if (snapshot.hasData) {
-                  final quote = snapshot
-                      .data![Random().nextInt(snapshot.data!.length)].text;
-                  return loadQuote(quote);
-                } else {
-                  return const Center(
-                    child: Text('No data available'),
-                  );
-                }
-              })),
+          body: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(getImage()), fit: BoxFit.cover)),
+            child: FutureBuilder(
+                future: myFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    final backupQuote =
+                        backupQuotes[Random().nextInt(backupQuotes.length)]
+                            .text;
+                    return loadQuote(backupQuote);
+                  } else if (snapshot.hasData) {
+                    final quote = snapshot
+                        .data![Random().nextInt(snapshot.data!.length)].text;
+                    return loadQuote(quote);
+                  } else {
+                    return const Center(
+                      child: Text('No data available'),
+                    );
+                  }
+                }),
+          )),
     );
   }
 
@@ -78,6 +102,10 @@ class _HomePageState extends State<HomePage> {
         child: Center(
             child: Padding(
                 padding: const EdgeInsets.all(10),
-                child: Text(shouldDisplay ? quote : ""))));
+                child: Text(
+                  shouldDisplay ? quote : "",
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white),
+                ))));
   }
 }
