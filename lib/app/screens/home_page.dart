@@ -1,10 +1,6 @@
-import 'dart:convert';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:jiggle_and_jot/app/data/backup_data.dart';
-import 'package:jiggle_and_jot/app/models/api_model.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:jiggle_and_jot/app/screens/quote_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,17 +10,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool shouldDisplay = false;
-  late final Future myFuture;
   String morningImg = 'assets/morning.jpg';
   String afternoonImg = 'assets/afternoon.jpg';
   String nightImg = 'assets/night.jpg';
+
   late String image;
+  late String message;
 
   @override
   void initState() {
     super.initState();
-    myFuture = fetchQuotes();
   }
 
   String getImage() {
@@ -39,73 +34,85 @@ class _HomePageState extends State<HomePage> {
     return image;
   }
 
-  Future<List<Quotes>> fetchQuotes() async {
-    var client = http.Client();
-    var uri = Uri.parse("https://type.fit/api/quotes");
-    final response = await client.get(uri);
-    if (response.statusCode == 200) {
-      List<dynamic> jsonData = json.decode(response.body);
-      return jsonData.map((res) => Quotes.fromJson(res)).toList();
+  String getMessage() {
+    var hour = DateTime.now().hour;
+    if (hour < 12) {
+      message = "Good Morning!";
+    } else if (hour < 17) {
+      message = "Good Afternoon!";
     } else {
-      throw Exception("Failed to load answer");
+      message = "Good Night!";
     }
+    return message;
   }
 
-  void showQuoteOnTap() {
-    setState(() {
-      shouldDisplay = true;
-    });
+  void goToQuote() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const QuotePage()));
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: showQuoteOnTap,
-      child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Your reading'),
+    return Scaffold(
+      // appBar: AppBar(
+      //   title: const Text('Your reading'),
+      // ),
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage(getImage()), fit: BoxFit.cover)),
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 60),
+                child: Container(
+                  alignment: Alignment.topCenter,
+                  child: Text(getMessage(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: GoogleFonts.allura().fontFamily,
+                        fontWeight: FontWeight.w400,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white,
+                        fontSize: 80,
+                        shadows: const [
+                          Shadow(
+                              color: Colors.black,
+                              blurRadius: 2.0,
+                              offset: Offset(2.0, 2.0))
+                        ],
+                      )),
+                ),
+              ),
+              Container(
+                alignment: Alignment.bottomCenter,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(300, 80),
+                        backgroundColor: Colors.transparent,
+                        padding: const EdgeInsets.all(0.5)),
+                    onPressed: () {
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => const QuotePage()));
+                      goToQuote();
+                    },
+                    child: const Text("Tap & Jot",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w300,
+                            color: Colors.white,
+                            fontSize: 20))),
+              )
+            ],
           ),
-          body: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage(getImage()), fit: BoxFit.cover)),
-            child: FutureBuilder(
-                future: myFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (snapshot.hasError) {
-                    final backupQuote =
-                        backupQuotes[Random().nextInt(backupQuotes.length)]
-                            .text;
-                    return loadQuote(backupQuote);
-                  } else if (snapshot.hasData) {
-                    final quote = snapshot
-                        .data![Random().nextInt(snapshot.data!.length)].text;
-                    return loadQuote(quote);
-                  } else {
-                    return const Center(
-                      child: Text('No data available'),
-                    );
-                  }
-                }),
-          )),
+        ),
+      ),
     );
-  }
-
-  SafeArea loadQuote(String quote) {
-    return SafeArea(
-        child: Center(
-            child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Text(
-                  shouldDisplay ? quote : "",
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.white),
-                ))));
   }
 }
