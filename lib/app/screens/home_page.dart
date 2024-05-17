@@ -12,6 +12,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String morningImg = 'assets/morning.jpg';
   String afternoonImg = 'assets/afternoon.jpg';
+  String eveningImg = 'assets/evening.jpg';
   String nightImg = 'assets/night.jpg';
 
   late String image;
@@ -26,8 +27,10 @@ class _HomePageState extends State<HomePage> {
     var hour = DateTime.now().hour;
     if (hour < 12) {
       image = morningImg;
-    } else if (hour < 17) {
+    } else if (hour >= 12 && hour < 17) {
       image = afternoonImg;
+    } else if (hour >= 17 && hour < 21) {
+      image = eveningImg;
     } else {
       image = nightImg;
     }
@@ -38,10 +41,12 @@ class _HomePageState extends State<HomePage> {
     var hour = DateTime.now().hour;
     if (hour < 12) {
       message = "Good Morning!";
-    } else if (hour < 17) {
+    } else if (hour >= 12 && hour < 17) {
       message = "Good Afternoon!";
+    } else if (hour >= 17 && hour < 21) {
+      message = "Good Evening!";
     } else {
-      message = "Good Night!";
+      message = 'Good Night!';
     }
     return message;
   }
@@ -69,7 +74,7 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 60),
+                padding: const EdgeInsets.only(top: 60, left: 10, right: 10),
                 child: Container(
                   alignment: Alignment.topCenter,
                   child: Text(getMessage(),

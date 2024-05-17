@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:jiggle_and_jot/app/data/backup_data.dart';
 import 'package:jiggle_and_jot/app/models/api_model.dart';
@@ -16,6 +17,7 @@ class QuotePage extends StatefulWidget {
 class _QuotePageState extends State<QuotePage> {
   bool shouldDisplay = false;
   late final Future myFuture;
+  String bookImg = 'assets/book.jpg';
 
   @override
   void initState() {
@@ -47,49 +49,53 @@ class _QuotePageState extends State<QuotePage> {
       child: GestureDetector(
         onTap: showQuoteOnTap,
         child: Container(
-          padding: const EdgeInsets.all(20),
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          color: Colors.lightBlueAccent,
+          decoration:
+              BoxDecoration(image: DecorationImage(image: AssetImage(bookImg))),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              FutureBuilder(
-                  future: myFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (snapshot.hasError) {
-                      final backupQuote =
-                          backupQuotes[Random().nextInt(backupQuotes.length)];
-                      return loadQuote(backupQuote);
-                    } else if (snapshot.hasData) {
-                      final quote = snapshot
-                          .data![Random().nextInt(snapshot.data!.length)];
-                      return loadQuote(quote);
-                    } else {
-                      return const Center(
-                        child: Text('No data available'),
-                      );
-                    }
-                  }),
-              Container(
-                alignment: Alignment.bottomCenter,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        fixedSize: const Size(300, 80),
-                        backgroundColor: Colors.transparent,
-                        padding: const EdgeInsets.all(0.5)),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Back to Home Page",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            color: Colors.white,
-                            fontSize: 20))),
+              Expanded(
+                child: FutureBuilder(
+                    future: myFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.hasError) {
+                        final backupQuote =
+                            backupQuotes[Random().nextInt(backupQuotes.length)];
+                        return loadQuote(backupQuote);
+                      } else if (snapshot.hasData) {
+                        final quote = snapshot
+                            .data![Random().nextInt(snapshot.data!.length)];
+                        return loadQuote(quote);
+                      } else {
+                        return const Center(
+                          child: Text('No data available'),
+                        );
+                      }
+                    }),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: Container(
+                  alignment: Alignment.bottomCenter,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          fixedSize: const Size(300, 80),
+                          backgroundColor: Colors.transparent,
+                          padding: const EdgeInsets.all(0.5)),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text("Back",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.white,
+                              fontSize: 20))),
+                ),
               )
             ],
           ),
@@ -103,20 +109,22 @@ class _QuotePageState extends State<QuotePage> {
     String authorName = quote.author.split(",").first;
     String author = authorName == "type.fit" ? "" : authorName;
     return SafeArea(
-        child: Center(
-            child: SizedBox(
-      child: DefaultTextStyle(
-        style:
-            const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(shouldDisplay ? text : ""),
-            const SizedBox(height: 10),
-            Text(shouldDisplay ? author : ""),
-          ],
-        ),
+        child: DefaultTextStyle(
+      style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(shouldDisplay ? text : "",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: GoogleFonts.allura().fontFamily,
+                fontWeight: FontWeight.w400,
+                fontSize: 30,
+              )),
+          const SizedBox(height: 10),
+          Text(shouldDisplay ? author : ""),
+        ],
       ),
-    )));
+    ));
   }
 }
