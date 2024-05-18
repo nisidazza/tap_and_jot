@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:jiggle_and_jot/app/screens/home_page.dart';
+import 'package:tap_and_jot/app/screens/home_page.dart';
 
 void main() {
   runApp(const MyApp());

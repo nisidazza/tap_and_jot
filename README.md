@@ -1,4 +1,4 @@
-# jiggle_and_jot
+# tap_and_jot
 
 A new Flutter project.
 

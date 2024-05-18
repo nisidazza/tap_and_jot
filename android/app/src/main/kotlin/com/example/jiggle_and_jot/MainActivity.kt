@@ -1,4 +1,4 @@
-package com.example.jiggle_and_jot
+package com.example.tap_and_jot
 
 import io.flutter.embedding.android.FlutterActivity
 

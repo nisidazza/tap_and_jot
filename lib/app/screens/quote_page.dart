@@ -4,8 +4,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:jiggle_and_jot/app/data/backup_data.dart';
-import 'package:jiggle_and_jot/app/models/api_model.dart';
+import 'package:tap_and_jot/app/data/backup_data.dart';
+import 'package:tap_and_jot/app/models/api_model.dart';
 
 class QuotePage extends StatefulWidget {
   const QuotePage({super.key});

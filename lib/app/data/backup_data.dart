@@ -1,4 +1,4 @@
-import 'package:jiggle_and_jot/app/models/api_model.dart';
+import 'package:tap_and_jot/app/models/api_model.dart';
 
 final List<Quotes> backupQuotes = [
   Quotes(
