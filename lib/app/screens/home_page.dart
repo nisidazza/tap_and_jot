@@ -42,9 +42,9 @@ class _HomePageState extends State<HomePage> {
     if (hour < 12) {
       message = "Good Morning!";
     } else if (hour >= 12 && hour < 17) {
-      message = "Good Afternoon!";
+      message = "Enjoy your Afternoon!";
     } else if (hour >= 17 && hour < 21) {
-      message = "Good Evening!";
+      message = "Enjoy your Evening!";
     } else {
       message = 'Good Night!';
     }
