@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -16,13 +17,23 @@ class QuotePage extends StatefulWidget {
 
 class _QuotePageState extends State<QuotePage> {
   bool shouldDisplay = false;
-  late final Future myFuture;
+  bool isOpaque = false;
+  bool isBGImgOpaque = false;
   String bookImg = 'assets/book.jpg';
+  String quote = "";
+  late final Future myFuture;
+  late Timer timer;
 
   @override
   void initState() {
     super.initState();
     myFuture = fetchQuotes();
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   Future<List<Quotes>> fetchQuotes() async {
@@ -40,6 +51,8 @@ class _QuotePageState extends State<QuotePage> {
   void showQuoteOnTap() {
     setState(() {
       shouldDisplay = true;
+      isOpaque = true;
+      isBGImgOpaque = true;
     });
   }
 
@@ -48,57 +61,63 @@ class _QuotePageState extends State<QuotePage> {
     return SafeArea(
       child: GestureDetector(
         onTap: showQuoteOnTap,
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage(bookImg), fit: BoxFit.cover)),
-          child: Column(
-            children: [
-              Expanded(
-                child: FutureBuilder(
-                    future: myFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else if (snapshot.hasError) {
-                        final backupQuote =
-                            backupQuotes[Random().nextInt(backupQuotes.length)];
-                        return loadQuote(backupQuote);
-                      } else if (snapshot.hasData) {
-                        final quote = snapshot
-                            .data![Random().nextInt(snapshot.data!.length)];
-                        return loadQuote(quote);
-                      } else {
-                        return const Center(
-                          child: Text('No data available'),
-                        );
-                      }
-                    }),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: Container(
-                  alignment: Alignment.bottomCenter,
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          fixedSize: const Size(300, 80),
-                          backgroundColor: Colors.transparent,
-                          padding: const EdgeInsets.all(0.5)),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text("Back",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              color: Colors.white,
-                              fontSize: 20))),
+        child: IgnorePointer(
+          ignoring: !!shouldDisplay,
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    opacity: isBGImgOpaque ? 0.4 : 1.0,
+                    image: AssetImage(bookImg),
+                    fit: BoxFit.cover)),
+            child: Column(
+              children: [
+                Expanded(
+                  child: FutureBuilder(
+                      future: myFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (snapshot.hasError) {
+                          final backupQuote = backupQuotes[
+                              Random().nextInt(backupQuotes.length)];
+                          return loadQuote(backupQuote);
+                        } else if (snapshot.hasData) {
+                          final quote = snapshot
+                              .data![Random().nextInt(snapshot.data!.length)];
+                          return loadQuote(quote);
+                        } else {
+                          return const Center(
+                            child: Text('No data available'),
+                          );
+                        }
+                      }),
                 ),
-              )
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: Container(
+                    alignment: Alignment.bottomCenter,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(300, 80),
+                            backgroundColor: Colors.transparent,
+                            padding: const EdgeInsets.all(0.5)),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Back",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                color: Colors.white,
+                                fontSize: 20))),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -112,19 +131,38 @@ class _QuotePageState extends State<QuotePage> {
     return SafeArea(
         child: DefaultTextStyle(
       style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(shouldDisplay ? text : "",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: GoogleFonts.allura().fontFamily,
-                fontWeight: FontWeight.w400,
-                fontSize: 30,
-              )),
-          const SizedBox(height: 10),
-          Text(shouldDisplay ? author : ""),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.only(left: 30, right: 30),
+        child: AnimatedOpacity(
+            opacity: isOpaque ? 1.0 : 0.0,
+            duration: const Duration(seconds: 3),
+            onEnd: () {
+              timer = Timer(const Duration(seconds: 6), () {
+                setState(() {
+                  shouldDisplay = false;
+                  isOpaque = false;
+                  isBGImgOpaque = false;
+                });
+              });
+            },
+            child: shouldDisplay
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(text,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: GoogleFonts.allura().fontFamily,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 40,
+                          )),
+                      const SizedBox(height: 10),
+                      Text(author),
+                    ],
+                  )
+                : const Scaffold(
+                    backgroundColor: Colors.transparent,
+                  )),
       ),
     ));
   }
