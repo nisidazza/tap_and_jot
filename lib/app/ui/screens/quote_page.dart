@@ -51,8 +51,9 @@ class _QuotePageState extends State<QuotePage> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          decoration:
-              BoxDecoration(image: DecorationImage(image: AssetImage(bookImg))),
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage(bookImg), fit: BoxFit.cover)),
           child: Column(
             children: [
               Expanded(

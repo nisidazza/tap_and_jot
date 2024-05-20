@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tap_and_jot/app/screens/quote_page.dart';
+import 'package:tap_and_jot/app/ui/screens/quote_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
