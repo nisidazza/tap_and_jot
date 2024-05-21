@@ -59,39 +59,38 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Tap & Jot'),
-      ),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage(getImage()), fit: BoxFit.cover)),
+                opacity: 0.95,
+                image: AssetImage(getImage()),
+                fit: BoxFit.cover)),
         child: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Padding(
+                  padding: const EdgeInsets.only(top: 60, left: 10, right: 10),
+                  child: Container(
+                    alignment: Alignment.topCenter,
+                    child: HomeText(
+                      text: getMessage(),
+                      fontSize: 40,
+                      fontWeight: FontWeight.w200,
+                    ),
+                  )),
               Padding(
                 padding: const EdgeInsets.only(top: 60, left: 10, right: 10),
                 child: Container(
-                  alignment: Alignment.topCenter,
-                  child: Text(getMessage(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontFamily: GoogleFonts.lobster().fontFamily,
-                        fontWeight: FontWeight.w400,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white,
-                        fontSize: 80,
-                        shadows: const [
-                          Shadow(
-                              color: Colors.black,
-                              blurRadius: 2.0,
-                              offset: Offset(2.0, 2.0))
-                        ],
-                      )),
+                  alignment: Alignment.center,
+                  child: const HomeText(
+                    text: "Go, Tap & Jot!",
+                    fontSize: 60,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
               Container(
@@ -102,15 +101,11 @@ class _HomePageState extends State<HomePage> {
                         backgroundColor: Colors.transparent,
                         padding: const EdgeInsets.all(0.5)),
                     onPressed: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const QuotePage()));
                       goToQuote();
                     },
-                    child: const Text("Inspire Now",
+                    child: const Text("Go to quote",
                         style: TextStyle(
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w400,
                             color: Colors.white,
                             fontSize: 20))),
               )
@@ -119,5 +114,34 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+}
+
+class HomeText extends StatelessWidget {
+  const HomeText(
+      {super.key,
+      required this.text,
+      required this.fontSize,
+      required this.fontWeight});
+
+  final String text;
+  final double fontSize;
+  final FontWeight fontWeight;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(text,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontFamily: GoogleFonts.indieFlower().fontFamily,
+          fontWeight: fontWeight,
+          fontStyle: FontStyle.italic,
+          color: Colors.white,
+          fontSize: fontSize,
+          shadows: const [
+            Shadow(
+                color: Colors.black, blurRadius: 2.0, offset: Offset(2.0, 2.0))
+          ],
+        ));
   }
 }
