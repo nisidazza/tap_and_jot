@@ -59,9 +59,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Your reading'),
-      // ),
+      appBar: AppBar(
+        title: const Text('Tap & Jot'),
+      ),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                   child: Text(getMessage(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontFamily: GoogleFonts.allura().fontFamily,
+                        fontFamily: GoogleFonts.lobster().fontFamily,
                         fontWeight: FontWeight.w400,
                         fontStyle: FontStyle.italic,
                         color: Colors.white,
@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                       //         builder: (context) => const QuotePage()));
                       goToQuote();
                     },
-                    child: const Text("Tap & Jot",
+                    child: const Text("Inspire Now",
                         style: TextStyle(
                             fontWeight: FontWeight.w300,
                             color: Colors.white,
