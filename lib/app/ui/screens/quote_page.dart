@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -27,22 +26,7 @@ class _QuotePageState extends State<QuotePage> {
     futureQuotes = fetchQuotes(http.Client());
   }
 
-  List<Quotes> parseQuotes(String responseBody) {
-    final parsed =
-        (jsonDecode(responseBody) as List).cast<Map<String, dynamic>>();
-
-    return parsed.map<Quotes>((json) => Quotes.fromJson(json)).toList();
-  }
-
-  Future<List<Quotes>> fetchQuotes(http.Client client) async {
-    var uri = Uri.parse("https://type.fit/api/quotes");
-    final response = await client.get(uri);
-    if (response.statusCode == 200) {
-      return parseQuotes(response.body);
-    } else {
-      throw Exception("Failed to load answer");
-    }
-  }
+  
 
   void showQuoteOnTap() {
     setState(() {
