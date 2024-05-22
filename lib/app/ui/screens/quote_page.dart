@@ -19,19 +19,12 @@ class _QuotePageState extends State<QuotePage> {
   bool isOpaque = false;
   bool isBGImgOpaque = false;
   String bookImg = 'assets/quote_BG.jpg';
-  late Future<List<Quotes>> myFuture;
-  late Timer timer;
+  late Future<List<Quotes>> futureQuotes;
 
   @override
   void initState() {
     super.initState();
-    myFuture = fetchQuotes(http.Client());
-  }
-
-  @override
-  void dispose() {
-    timer.cancel();
-    super.dispose();
+    futureQuotes = fetchQuotes(http.Client());
   }
 
   List<Quotes> parseQuotes(String responseBody) {
@@ -75,7 +68,7 @@ class _QuotePageState extends State<QuotePage> {
           children: [
             Expanded(
               child: FutureBuilder<List<Quotes>>(
-                  future: myFuture,
+                  future: futureQuotes,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
