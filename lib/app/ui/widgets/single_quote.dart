@@ -7,23 +7,22 @@ import 'package:tap_and_jot/app/models/api_model.dart';
 class SingleQuote extends StatelessWidget {
   const SingleQuote(
       {super.key,
-      required this.quotes,
+      required this.quote,
       required this.shouldDisplay,
       required this.isOpaque});
 
-  final List<Quotes> quotes;
+  final Quote quote;
   final bool shouldDisplay;
   final bool isOpaque;
 
-  getRandomQuote(List<Quotes> data) {
+  getRandomQuote(List<Quote> data) {
     return data[Random().nextInt(data.length)];
   }
 
   @override
   Widget build(BuildContext context) {
-    Quotes quote = getRandomQuote(quotes);
-    String text = quote.text;
-    String authorName = quote.author.split(",").first;
+    String? text = quote.text;
+    String? authorName = quote.author.split(",").first;
     String author = authorName == "type.fit" ? "" : authorName;
     return SafeArea(
         child: DefaultTextStyle(

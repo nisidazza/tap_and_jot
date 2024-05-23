@@ -17,7 +17,7 @@ void main() {
           (_) async => http.Response(
               '[{"text": "mock quote", "author": "mock author"}]', 200));
 
-      expect(await fetchQuotes(client), isA<List<Quotes>>());
+      expect(await fetchQuotes(client), isA<List<Quote>>());
     });
 
     test('throws an exception if the http call completes with an error', () {

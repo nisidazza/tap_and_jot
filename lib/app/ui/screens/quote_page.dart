@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -18,7 +19,8 @@ class _QuotePageState extends State<QuotePage> {
   bool isOpaque = false;
   bool isBGImgOpaque = false;
   String bookImg = 'assets/quote_BG.jpg';
-  late Future<List<Quotes>> futureQuotes;
+  late Future<List<Quote>> futureQuotes;
+  late Quote currentQuote;
 
   @override
   void initState() {
@@ -26,14 +28,16 @@ class _QuotePageState extends State<QuotePage> {
     futureQuotes = fetchQuotes(http.Client());
   }
 
-  
-
   void showQuoteOnTap() {
     setState(() {
       shouldDisplay = !shouldDisplay;
       isOpaque = !isOpaque;
       isBGImgOpaque = !isBGImgOpaque;
     });
+  }
+
+  getRandomQuote(List<Quote> data) {
+    return data[Random().nextInt(data.length)];
   }
 
   @override
@@ -51,7 +55,7 @@ class _QuotePageState extends State<QuotePage> {
         child: Column(
           children: [
             Expanded(
-              child: FutureBuilder<List<Quotes>>(
+              child: FutureBuilder<List<Quote>>(
                   future: futureQuotes,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -59,14 +63,15 @@ class _QuotePageState extends State<QuotePage> {
                         child: CircularProgressIndicator(),
                       );
                     } else if (snapshot.hasError) {
+                      currentQuote = getRandomQuote(backupQuotes);
                       return SingleQuote(
-                        quotes: backupQuotes,
+                        quote: currentQuote,
                         shouldDisplay: shouldDisplay,
                         isOpaque: isOpaque,
                       );
                     } else if (snapshot.hasData) {
                       return SingleQuote(
-                        quotes: snapshot.data!,
+                        quote: getRandomQuote(snapshot.data!),
                         shouldDisplay: shouldDisplay,
                         isOpaque: isOpaque,
                       );
