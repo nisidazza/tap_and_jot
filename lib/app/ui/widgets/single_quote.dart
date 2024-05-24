@@ -37,6 +37,7 @@ class SingleQuote extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(text,
+                          textDirection: TextDirection.ltr,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: GoogleFonts.badScript().fontFamily,
@@ -45,12 +46,13 @@ class SingleQuote extends StatelessWidget {
                             fontSize: 40,
                           )),
                       const SizedBox(height: 10),
-                      Text(author),
+                      Text(
+                        author,
+                        textDirection: TextDirection.ltr,
+                      ),
                     ],
                   )
-                : const Scaffold(
-                    backgroundColor: Colors.transparent,
-                  )),
+                : Container(color: Colors.transparent)),
       ),
     ));
   }

@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-// A function that converts a response body into a List<Quote>.
 List<Quote> parseQuote(String responseBody) {
-  return (jsonDecode(responseBody) as List)
-      .map<Quote>((json) => Quote.fromJson(json))
-      .toList();
+  final parsedJson = jsonDecode(responseBody) as List;
+  // print('${parsedJson.runtimeType} : $parsedJson');
+  return parsedJson
+      .map<Quote>((json) => Quote.fromJson(json as Map<String, dynamic>))
+      .toList(); // map() returns an Iterable so we convert it to a List
 }
 
 Future<List<Quote>> fetchQuotes(http.Client client) async {
@@ -15,9 +15,6 @@ Future<List<Quote>> fetchQuotes(http.Client client) async {
   final response = await client.get(uri);
   if (response.statusCode == 200) {
     final quotes = parseQuote(response.body);
-    if (kDebugMode) {
-      print(quotes.first);
-    }
     return quotes;
   } else {
     throw Exception("Failed to load answer");
@@ -34,7 +31,14 @@ class Quote {
   });
 
   factory Quote.fromJson(Map<String, dynamic> json) {
-    return Quote(
-        text: json['text'] as String, author: json['author'] as String);
+    if (json
+        case {
+          'text': String text,
+          'author': String author,
+        }) {
+      return Quote(text: text, author: author);
+    } else {
+      throw FormatException('Invalid JSON: $json');
+    }
   }
 }
