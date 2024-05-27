@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:tap_and_jot/app/data/backup_data.dart';
@@ -50,6 +51,10 @@ class _QuotePageState extends State<QuotePage> {
         decoration: BoxDecoration(
             image: DecorationImage(
                 opacity: isBGImgOpaque ? 0.4 : 1.0,
+                colorFilter: isBGImgOpaque & kIsWeb
+                    ? ColorFilter.mode(
+                        Colors.black.withOpacity(0.7), BlendMode.darken)
+                    : null,
                 image: AssetImage(bookImg),
                 fit: BoxFit.cover)),
         child: Column(
@@ -86,19 +91,22 @@ class _QuotePageState extends State<QuotePage> {
               padding: const EdgeInsets.only(bottom: 20),
               child: Container(
                 alignment: Alignment.bottomCenter,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        fixedSize: const Size(300, 80),
-                        backgroundColor: Colors.transparent,
-                        padding: const EdgeInsets.all(0.5)),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Back",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            color: Colors.white,
-                            fontSize: 20))),
+                child: Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          fixedSize: const Size(300, 80),
+                          backgroundColor: Colors.transparent,
+                          padding: const EdgeInsets.all(0.5)),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text("Back",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.white,
+                              fontSize: 20))),
+                ),
               ),
             )
           ],
