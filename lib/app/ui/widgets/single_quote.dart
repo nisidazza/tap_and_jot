@@ -32,27 +32,30 @@ class SingleQuote extends StatelessWidget {
         child: AnimatedOpacity(
             opacity: isOpaque ? 1.0 : 0.0,
             duration: const Duration(seconds: 2),
-            child: shouldDisplay
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(text,
+            child: 
+                Visibility(
+                  visible: shouldDisplay,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(text,
+                            textDirection: TextDirection.ltr,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: GoogleFonts.badScript().fontFamily,
+                              fontWeight: FontWeight.w500,
+                              fontStyle: FontStyle.italic,
+                              fontSize: 40,
+                            )),
+                        const SizedBox(height: 10),
+                        Text(
+                          author,
                           textDirection: TextDirection.ltr,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: GoogleFonts.badScript().fontFamily,
-                            fontWeight: FontWeight.w500,
-                            fontStyle: FontStyle.italic,
-                            fontSize: 40,
-                          )),
-                      const SizedBox(height: 10),
-                      Text(
-                        author,
-                        textDirection: TextDirection.ltr,
-                      ),
-                    ],
-                  )
-                : Container(color: Colors.transparent)),
+                        ),
+                      ],
+                    ),
+                )
+                ),
       ),
     ));
   }
