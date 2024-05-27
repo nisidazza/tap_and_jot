@@ -21,7 +21,6 @@ class _QuotePageState extends State<QuotePage> {
   bool isBGImgOpaque = false;
   String bookImg = 'assets/quote_BG.jpg';
   late Future<List<Quote>> futureQuotes;
-  late Quote currentQuote;
 
   @override
   void initState() {
@@ -68,9 +67,8 @@ class _QuotePageState extends State<QuotePage> {
                         child: CircularProgressIndicator(),
                       );
                     } else if (snapshot.hasError) {
-                      currentQuote = getRandomQuote(backupQuotes);
                       return SingleQuote(
-                        quote: currentQuote,
+                        quote: getRandomQuote(backupQuotes),
                         shouldDisplay: shouldDisplay,
                         isOpaque: isOpaque,
                       );
