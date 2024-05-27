@@ -40,13 +40,13 @@ class _HomePageState extends State<HomePage> {
   String getMessage() {
     var hour = DateTime.now().hour;
     if (hour < 12) {
-      message = "Good Morning!";
+      message = "Happy Morning to you!";
     } else if (hour >= 12 && hour < 17) {
-      message = "Enjoy your Afternoon!";
+      message = "How’s your day?";
     } else if (hour >= 17 && hour < 21) {
-      message = "Enjoy your Evening!";
+      message = "Relax and unwind tonight!";
     } else {
-      message = 'Good Night!';
+      message = 'Good Vibes, Good Night!';
     }
     return message;
   }
