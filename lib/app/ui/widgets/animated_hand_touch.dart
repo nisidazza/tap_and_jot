@@ -32,10 +32,8 @@ class _AnimatedHandTouch extends State<AnimatedHandTouch>
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.transparent,
-        body: Semantics(
-          label: "Tap the screen to reveal your quote",
-          child: Center(
-              child: IgnorePointer(
+        body: Center(
+          child: IgnorePointer(
             ignoring: true,
             child: IconButton(
                 iconSize: 100,
@@ -50,7 +48,7 @@ class _AnimatedHandTouch extends State<AnimatedHandTouch>
                         controller: _touchHandController,
                       ),
                     ))),
-          )),
+          ),
         ));
   }
 }
