@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:tap_and_jot/app/data/backup_data.dart';
 import 'package:tap_and_jot/app/models/api_model.dart';
+import 'package:tap_and_jot/app/ui/widgets/animated_hand_touch.dart';
 import 'package:tap_and_jot/app/ui/widgets/single_quote.dart';
 
 class QuotePage extends StatefulWidget {
@@ -19,6 +20,7 @@ class _QuotePageState extends State<QuotePage> {
   bool shouldDisplay = false;
   bool isOpaque = false;
   bool isBGImgOpaque = false;
+  bool isIconVisible = true;
   String bookImg = 'assets/quote_BG.jpg';
   late Future<List<Quote>> futureQuotes;
 
@@ -26,6 +28,13 @@ class _QuotePageState extends State<QuotePage> {
   void initState() {
     super.initState();
     futureQuotes = fetchQuotes(http.Client());
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        setState(() {
+          isIconVisible = false;
+        });
+      }
+    });
   }
 
   void showQuoteOnTap() {
@@ -43,13 +52,14 @@ class _QuotePageState extends State<QuotePage> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      excludeFromSemantics: true,
       onTap: showQuoteOnTap,
       child: Semantics(
         container: true,
         label: shouldDisplay ? "" : "Quote Screen",
         hint: shouldDisplay
             ? ""
-            : "Tap the screen to reveal a random inspirational quote. ap again to hide the current quote.",
+            : "Tap the screen to reveal a random inspirational quote. Tap again to hide the current quote.",
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
@@ -65,31 +75,37 @@ class _QuotePageState extends State<QuotePage> {
           child: Column(
             children: [
               Expanded(
-                child: FutureBuilder<List<Quote>>(
-                    future: futureQuotes,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else if (snapshot.hasError) {
-                        return SingleQuote(
-                          quote: getRandomQuote(backupQuotes),
-                          shouldDisplay: shouldDisplay,
-                          isOpaque: isOpaque,
-                        );
-                      } else if (snapshot.hasData) {
-                        return SingleQuote(
-                          quote: getRandomQuote(snapshot.data!),
-                          shouldDisplay: shouldDisplay,
-                          isOpaque: isOpaque,
-                        );
-                      } else {
-                        return const Center(
-                          child: Text('No data available'),
-                        );
-                      }
-                    }),
+                child: isIconVisible
+                    ? Visibility(
+                        visible: isIconVisible,
+                        child: const AnimatedHandTouch(),
+                      )
+                    : FutureBuilder<List<Quote>>(
+                        future: futureQuotes,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (snapshot.hasError) {
+                            return SingleQuote(
+                              quote: getRandomQuote(backupQuotes),
+                              shouldDisplay: shouldDisplay,
+                              isOpaque: isOpaque,
+                            );
+                          } else if (snapshot.hasData) {
+                            return SingleQuote(
+                              quote: getRandomQuote(snapshot.data!),
+                              shouldDisplay: shouldDisplay,
+                              isOpaque: isOpaque,
+                            );
+                          } else {
+                            return const Center(
+                              child: Text('No data available'),
+                            );
+                          }
+                        }),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 20),
