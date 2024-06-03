@@ -30,11 +30,13 @@ class _AnimatedHandTouch extends State<AnimatedHandTouch>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Center(
-          child: IgnorePointer(
-            ignoring: true,
+    return Container(
+        color: Colors.transparent,
+        child: Center(
+          child: Semantics(
+            button: true,
+            label: 'touch screen icon',
+            excludeSemantics: true,
             child: IconButton(
                 iconSize: 100,
                 onPressed: () {},

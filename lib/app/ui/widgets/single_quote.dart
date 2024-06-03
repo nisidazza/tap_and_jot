@@ -24,39 +24,46 @@ class SingleQuote extends StatelessWidget {
     String? text = quote.text;
     String? authorName = quote.author.split(",").first;
     String author = authorName == "type.fit" ? "" : authorName;
-    return SafeArea(
-        child: DefaultTextStyle(
+    return DefaultTextStyle(
       style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
       child: Padding(
-        padding: const EdgeInsets.only(left: 30, right: 30),
-        child: AnimatedOpacity(
+          padding: const EdgeInsets.only(left: 30, right: 30),
+          child: AnimatedOpacity(
             opacity: isOpaque ? 1.0 : 0.0,
             duration: const Duration(seconds: 2),
-            child: 
-                Visibility(
-                  visible: shouldDisplay,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(text,
-                            textDirection: TextDirection.ltr,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: GoogleFonts.badScript().fontFamily,
-                              fontWeight: FontWeight.w500,
-                              fontStyle: FontStyle.italic,
-                              fontSize: 40,
-                            )),
-                        const SizedBox(height: 10),
-                        Text(
-                          author,
-                          textDirection: TextDirection.ltr,
-                        ),
-                      ],
+            child: Visibility(
+              visible: shouldDisplay,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Semantics(
+                    label: text,
+                    excludeSemantics: true,
+                    textDirection: TextDirection.ltr,
+                    child: Text(text,
+                        textDirection: TextDirection.ltr,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: GoogleFonts.badScript().fontFamily,
+                          fontWeight: FontWeight.w500,
+                          fontStyle: FontStyle.italic,
+                          fontSize: 40,
+                        )),
+                  ),
+                  const SizedBox(height: 10),
+                  Semantics(
+                    label: author,
+                    excludeSemantics: true,
+                    textDirection: TextDirection.ltr,
+                    child: Text(
+                      author,
+                      textDirection: TextDirection.ltr,
                     ),
-                )
-                ),
-      ),
-    ));
+                  ),
+                ],
+              ),
+            ),
+          )),
+    );
   }
 }

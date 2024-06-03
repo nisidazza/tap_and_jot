@@ -58,13 +58,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Semantics(
-        label: 'Home Screen',
-        container: true,
-        child: GestureDetector(
-          excludeFromSemantics: true,
-          onTap: goToQuote,
+    return Semantics(
+      button: true,
+      child: GestureDetector(
+        onTap: goToQuote,
+        child: Semantics(
+          container: true,
           child: Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
@@ -83,10 +82,15 @@ class _HomePageState extends State<HomePage> {
                           const EdgeInsets.only(top: 60, left: 10, right: 10),
                       child: Container(
                         alignment: Alignment.topCenter,
-                        child: HomeText(
-                          text: getMessage(),
-                          fontSize: 40,
-                          fontWeight: FontWeight.w200,
+                        child: Semantics(
+                          liveRegion: true,
+                          label: getMessage(),
+                          excludeSemantics: true,
+                          child: HomeText(
+                            text: getMessage(),
+                            fontSize: 40,
+                            fontWeight: FontWeight.w200,
+                          ),
                         ),
                       )),
                   Padding(
@@ -94,29 +98,36 @@ class _HomePageState extends State<HomePage> {
                         const EdgeInsets.only(top: 30, left: 10, right: 10),
                     child: Container(
                       alignment: Alignment.center,
-                      child: const HomeText(
-                        text: "Tap & Jot!",
-                        fontSize: 75,
-                        fontWeight: FontWeight.w500,
+                      child: Semantics(
+                        excludeSemantics: true,
+                        child: const HomeText(
+                          text: "Tap & Jot!",
+                          fontSize: 75,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
                   Container(
-                    alignment: Alignment.bottomCenter,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            fixedSize: const Size(300, 80),
-                            backgroundColor: Colors.transparent,
-                            padding: const EdgeInsets.all(0.5)),
-                        onPressed: () {
-                          goToQuote();
-                        },
-                        child: const Text("Go to quote",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white,
-                                fontSize: 20))),
-                  )
+                      alignment: Alignment.bottomCenter,
+                      child: Semantics(
+                        button: true,
+                        label: "Go to quote",
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              fixedSize: const Size(300, 80),
+                              backgroundColor: Colors.transparent,
+                              padding: const EdgeInsets.all(0.5)),
+                          onPressed: () {
+                            goToQuote();
+                          },
+                          child: const Text("Go to quote",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
+                                  fontSize: 20)),
+                        ),
+                      )),
                 ],
               ),
             ),
