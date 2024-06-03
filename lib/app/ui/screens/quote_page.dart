@@ -78,7 +78,7 @@ class _QuotePageState extends State<QuotePage> {
                 child: isIconVisible
                     ? Visibility(
                         visible: isIconVisible,
-                        child: const AnimatedHandTouch(),
+                        child: const ExcludeSemantics(child: AnimatedHandTouch()),
                       )
                     : FutureBuilder<List<Quote>>(
                         future: futureQuotes,
