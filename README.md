@@ -39,4 +39,20 @@ Tap & Jot features a clean and minimalist design that is easy to navigate. The h
 
 Run into the same quote more than once? It could be a sign! Let these moments of serendipity guide and inspire you, adding a layer of meaning to your experience.
 
+<table>
+  <tr>
+    <td><img src=https://github.com/nisidazza/tap_and_jot/assets/13388161/e23965c6-68d3-42d8-b394-9e91556c01cb width=150 height=300/></td>
+    <td><img src=https://github.com/nisidazza/tap_and_jot/assets/13388161/37e47697-2ccf-4f31-9634-af2218045201 width=150 height=300/></td>
+    <td><img src=https://github.com/nisidazza/tap_and_jot/assets/13388161/20a5d462-2dbd-4039-8d05-eac71c3727e2 width=150 height=300/></td>
+    <td><img src=https://github.com/nisidazza/tap_and_jot/assets/13388161/caba3454-611b-4a94-ad93-450dbc63533e width=150 height=300/></td>
+  </tr>
+</table>
+
+
+
+
+
+
+
+
 
