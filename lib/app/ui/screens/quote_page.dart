@@ -23,26 +23,39 @@ class _QuotePageState extends State<QuotePage> {
   bool isIconVisible = true;
   String bookImg = 'assets/quote_BG.jpg';
   late Future<List<Quote>> futureQuotes;
+  Timer? iconVisibilityTimer;
+  bool _disposed = false;
 
   @override
   void initState() {
     super.initState();
     futureQuotes = fetchQuotes(http.Client());
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
+    iconVisibilityTimer = Timer(const Duration(seconds: 3), () {
+      if (!_disposed) {
         setState(() {
           isIconVisible = false;
         });
       }
     });
+    // debugPrint("QuotePage initState completed.");
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    iconVisibilityTimer?.cancel();
+    // debugPrint("QuotePage disposed and timer cancelled.");
+    super.dispose();
   }
 
   void showQuoteOnTap() {
-    setState(() {
-      shouldDisplay = !shouldDisplay;
-      isOpaque = !isOpaque;
-      isBGImgOpaque = !isBGImgOpaque;
-    });
+    if (!_disposed) {
+      setState(() {
+        shouldDisplay = !shouldDisplay;
+        isOpaque = !isOpaque;
+        isBGImgOpaque = !isBGImgOpaque;
+      });
+    }
   }
 
   getRandomQuote(List<Quote> data) {
@@ -54,9 +67,10 @@ class _QuotePageState extends State<QuotePage> {
     return IgnorePointer(
       ignoring: isIconVisible,
       child: Semantics(
+        label: 'Quote Screen',
+        textDirection: TextDirection.ltr,
         liveRegion: true,
         button: true,
-        onTap: showQuoteOnTap,
         child: GestureDetector(
           onTap: showQuoteOnTap,
           child: Container(
@@ -89,6 +103,7 @@ class _QuotePageState extends State<QuotePage> {
                                   ConnectionState.waiting) {
                                 return Semantics(
                                   label: 'Loading',
+                                  textDirection: TextDirection.ltr,
                                   excludeSemantics: true,
                                   child: const Center(
                                     child: CircularProgressIndicator(),
@@ -108,7 +123,10 @@ class _QuotePageState extends State<QuotePage> {
                                 );
                               } else {
                                 return const Center(
-                                  child: Text('No data available'),
+                                  child: Text(
+                                    'No data available',
+                                    textDirection: TextDirection.ltr,
+                                  ),
                                 );
                               }
                             }),
@@ -117,10 +135,10 @@ class _QuotePageState extends State<QuotePage> {
                     padding: const EdgeInsets.only(bottom: 20),
                     child: Container(
                       alignment: Alignment.bottomCenter,
-                      child: Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: Semantics(
-                          button: true,
+                      child: Semantics(
+                        button: true,
+                        child: Directionality(
+                          textDirection: TextDirection.ltr,
                           child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   fixedSize: const Size(300, 80),
@@ -137,7 +155,7 @@ class _QuotePageState extends State<QuotePage> {
                         ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

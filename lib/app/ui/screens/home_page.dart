@@ -60,6 +60,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
+      label: 'Home Screen',
+      textDirection: TextDirection.ltr,
       child: GestureDetector(
         onTap: goToQuote,
         child: Semantics(
@@ -77,57 +79,71 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Padding(
-                      padding:
-                          const EdgeInsets.only(top: 60, left: 10, right: 10),
-                      child: Container(
-                        alignment: Alignment.topCenter,
-                        child: Semantics(
-                          liveRegion: true,
-                          label: getMessage(),
-                          excludeSemantics: true,
-                          child: HomeText(
-                            text: getMessage(),
-                            fontSize: 40,
-                            fontWeight: FontWeight.w200,
+                  Expanded(
+                    child: Padding(
+                        padding:
+                            const EdgeInsets.only(top: 60, left: 10, right: 10),
+                        child: Container(
+                          alignment: Alignment.topCenter,
+                          child: Semantics(
+                            liveRegion: true,
+                            label: getMessage(),
+                            textDirection: TextDirection.ltr,
+                            excludeSemantics: true,
+                            child: HomeText(
+                              text: getMessage(),
+                              fontSize: 40,
+                              fontWeight: FontWeight.w200,
+                            ),
                           ),
-                        ),
-                      )),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(top: 30, left: 10, right: 10),
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: Semantics(
-                        excludeSemantics: true,
-                        child: const HomeText(
-                          text: "Tap & Jot!",
-                          fontSize: 75,
-                          fontWeight: FontWeight.w500,
+                        )),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(top: 30, left: 10, right: 10),
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Semantics(
+                          excludeSemantics: true,
+                          child: const HomeText(
+                            text: "Tap & Jot!",
+                            fontSize: 75,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                  Container(
-                      alignment: Alignment.bottomCenter,
-                      child: Semantics(
-                        button: true,
-                        label: "Go to quote",
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              fixedSize: const Size(300, 80),
-                              backgroundColor: Colors.transparent,
-                              padding: const EdgeInsets.all(0.5)),
-                          onPressed: () {
-                            goToQuote();
-                          },
-                          child: const Text("Go to quote",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.white,
-                                  fontSize: 20)),
-                        ),
-                      )),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: Container(
+                          alignment: Alignment.bottomCenter,
+                          child: Semantics(
+                            button: true,
+                            label: "Go to quote",
+                            textDirection: TextDirection.ltr,
+                            child: Directionality(
+                              textDirection: TextDirection.ltr,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    fixedSize: const Size(300, 80),
+                                    backgroundColor: Colors.transparent,
+                                    padding: const EdgeInsets.all(0.5)),
+                                onPressed: () {
+                                  goToQuote();
+                                },
+                                child: const Text("Go to quote",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.white,
+                                        fontSize: 20)),
+                              ),
+                            ),
+                          )),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -152,6 +168,7 @@ class HomeText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(text,
+        textDirection: TextDirection.ltr,
         textAlign: TextAlign.center,
         style: TextStyle(
           fontFamily: GoogleFonts.indieFlower().fontFamily,

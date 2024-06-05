@@ -35,21 +35,25 @@ class _AnimatedHandTouch extends State<AnimatedHandTouch>
         child: Center(
           child: Semantics(
             button: true,
+            textDirection: TextDirection.ltr,
             label: 'touch screen icon',
             excludeSemantics: true,
-            child: IconButton(
-                iconSize: 100,
-                onPressed: () {},
-                icon: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ColorFiltered(
-                      colorFilter: const ColorFilter.mode(
-                          Colors.white, BlendMode.srcATop),
-                      child: Lottie.asset(
-                        Icons8.tap,
-                        controller: _touchHandController,
-                      ),
-                    ))),
+            child: Directionality(
+              textDirection: TextDirection.ltr,
+              child: IconButton(
+                  iconSize: 100,
+                  onPressed: () {},
+                  icon: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ColorFiltered(
+                        colorFilter: const ColorFilter.mode(
+                            Colors.white, BlendMode.srcATop),
+                        child: Lottie.asset(
+                          Icons8.tap,
+                          controller: _touchHandController,
+                        ),
+                      ))),
+            ),
           ),
         ));
   }

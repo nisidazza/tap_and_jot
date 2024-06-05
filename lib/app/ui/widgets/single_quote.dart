@@ -27,7 +27,7 @@ class SingleQuote extends StatelessWidget {
     return DefaultTextStyle(
       style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
       child: Padding(
-          padding: const EdgeInsets.only(left: 30, right: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 30),
           child: AnimatedOpacity(
             opacity: isOpaque ? 1.0 : 0.0,
             duration: const Duration(seconds: 2),
