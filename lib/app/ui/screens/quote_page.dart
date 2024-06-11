@@ -4,6 +4,9 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image/image.dart' as img;
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:tap_and_jot/app/data/backup_data.dart';
 import 'package:tap_and_jot/app/models/api_model.dart';
 import 'package:tap_and_jot/app/ui/widgets/animated_hand_touch.dart';
@@ -25,6 +28,9 @@ class _QuotePageState extends State<QuotePage> {
   late Future<List<Quote>> futureQuotes;
   Timer? iconVisibilityTimer;
   bool _disposed = false;
+  late Uint8List screenshotFile;
+
+  ScreenshotController screenshotController = ScreenshotController();
 
   @override
   void initState() {
@@ -62,106 +68,167 @@ class _QuotePageState extends State<QuotePage> {
     return data[Random().nextInt(data.length)];
   }
 
+  Future<dynamic> showCapturedImage(
+      BuildContext context, img.Image capturedImage) {
+    return showDialog(
+        context: context,
+        builder: (context) => Scaffold(
+            appBar: AppBar(title: const Text("Captured widget screenshot")),
+            body: Center(
+                child: Image.memory(
+              img.encodeJpg(capturedImage),
+              semanticLabel: "Quote screenshot",
+            ))));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return IgnorePointer(
-      ignoring: isIconVisible,
-      child: Semantics(
-        label: 'Quote Screen',
-        textDirection: TextDirection.ltr,
-        liveRegion: true,
-        button: true,
-        child: GestureDetector(
-          onTap: showQuoteOnTap,
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    opacity: isBGImgOpaque ? 0.4 : 1.0,
-                    colorFilter: isBGImgOpaque & kIsWeb
-                        ? ColorFilter.mode(
-                            Colors.black.withOpacity(0.7), BlendMode.darken)
-                        : null,
-                    image: AssetImage(bookImg),
-                    fit: BoxFit.cover)),
-            child: Semantics(
-              expanded: true,
-              liveRegion: true,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: isIconVisible
-                        ? Visibility(
-                            visible: isIconVisible,
-                            child: const AnimatedHandTouch(),
-                          )
-                        : FutureBuilder<List<Quote>>(
-                            future: futureQuotes,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Semantics(
-                                  label: 'Loading',
-                                  textDirection: TextDirection.ltr,
-                                  excludeSemantics: true,
-                                  child: const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                );
-                              } else if (snapshot.hasError) {
-                                return SingleQuote(
-                                  quote: getRandomQuote(backupQuotes),
-                                  shouldDisplay: shouldDisplay,
-                                  isOpaque: isOpaque,
-                                );
-                              } else if (snapshot.hasData) {
-                                return SingleQuote(
-                                  quote: getRandomQuote(snapshot.data!),
-                                  shouldDisplay: shouldDisplay,
-                                  isOpaque: isOpaque,
-                                );
-                              } else {
-                                return const Center(
-                                  child: Text(
-                                    'No data available',
+    return Screenshot(
+      controller: screenshotController,
+      child: IgnorePointer(
+        ignoring: isIconVisible,
+        child: Semantics(
+          label: 'Quote Screen',
+          textDirection: TextDirection.ltr,
+          liveRegion: true,
+          button: true,
+          child: GestureDetector(
+            onTap: showQuoteOnTap,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      opacity: isBGImgOpaque ? 0.4 : 1.0,
+                      colorFilter: isBGImgOpaque & kIsWeb
+                          ? ColorFilter.mode(
+                              Colors.black.withOpacity(0.7), BlendMode.darken)
+                          : null,
+                      image: AssetImage(bookImg),
+                      fit: BoxFit.cover)),
+              child: Semantics(
+                expanded: true,
+                liveRegion: true,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: isIconVisible
+                          ? Visibility(
+                              visible: isIconVisible,
+                              child: const AnimatedHandTouch(),
+                            )
+                          : FutureBuilder<List<Quote>>(
+                              future: futureQuotes,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Semantics(
+                                    label: 'Loading',
                                     textDirection: TextDirection.ltr,
-                                  ),
-                                );
-                              }
-                            }),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: Container(
-                      alignment: Alignment.bottomCenter,
-                      child: Semantics(
-                        button: true,
-                        child: Directionality(
-                          textDirection: TextDirection.ltr,
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  fixedSize: const Size(300, 80),
-                                  backgroundColor: Colors.transparent,
-                                  padding: const EdgeInsets.all(0.5)),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text("Back",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w300,
-                                      color: Colors.white,
-                                      fontSize: 20))),
-                        ),
-                      ),
+                                    excludeSemantics: true,
+                                    child: const Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
+                                } else if (snapshot.hasError) {
+                                  return SingleQuote(
+                                    quote: getRandomQuote(backupQuotes),
+                                    shouldDisplay: shouldDisplay,
+                                    isOpaque: isOpaque,
+                                  );
+                                } else if (snapshot.hasData) {
+                                  return SingleQuote(
+                                    quote: getRandomQuote(snapshot.data!),
+                                    shouldDisplay: shouldDisplay,
+                                    isOpaque: isOpaque,
+                                  );
+                                } else {
+                                  return const Center(
+                                    child: Text(
+                                      'No data available',
+                                      textDirection: TextDirection.ltr,
+                                    ),
+                                  );
+                                }
+                              }),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: Container(
+                          alignment: Alignment.bottomCenter,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Expanded(
+                                child: Semantics(
+                                  button: true,
+                                  child: Directionality(
+                                    textDirection: TextDirection.ltr,
+                                    child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            fixedSize: const Size(300, 80),
+                                            backgroundColor: Colors.transparent,
+                                            padding: const EdgeInsets.all(0.5)),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("Back",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.white,
+                                                fontSize: 20))),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Semantics(
+                                    button: true,
+                                    child: Directionality(
+                                      textDirection: TextDirection.ltr,
+                                      child: IconButton(
+                                        icon: const Icon(Icons.photo_camera,
+                                            color: Colors.white, size: 30),
+                                        style: IconButton.styleFrom(
+                                            fixedSize: const Size(300, 80),
+                                            backgroundColor: Colors.transparent,
+                                            padding: const EdgeInsets.all(0.5)),
+                                        onPressed: () {
+                                          !isIconVisible
+                                              ? captureAndSaveImage(context)
+                                              : null;
+                                        },
+                                      ),
+                                    )),
+                              )
+                            ],
+                          )),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  Future<Null> captureAndSaveImage(BuildContext context) {
+    return screenshotController.capture().then((Uint8List? image) async {
+      if (image != null) {
+        img.Image newImage = img.adjustColor(
+          img.decodeImage(image)!,
+          contrast: 1.1,
+          brightness: 0.9,
+          saturation: 0.9,
+        );
+
+        showCapturedImage(context, newImage);
+        await ImageGallerySaver.saveImage((img.encodeJpg(newImage)));
+      }
+    }).catchError((error) {
+      print(error);
+    });
   }
 }
