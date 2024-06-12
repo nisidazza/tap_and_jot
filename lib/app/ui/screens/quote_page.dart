@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:image/image.dart' as img;
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:tap_and_jot/app/data/backup_data.dart';
@@ -69,14 +69,14 @@ class _QuotePageState extends State<QuotePage> {
   }
 
   Future<dynamic> showCapturedImage(
-      BuildContext context, img.Image capturedImage) {
+      BuildContext context, Uint8List capturedImage) {
     return showDialog(
         context: context,
         builder: (context) => Scaffold(
             appBar: AppBar(title: const Text("Captured widget screenshot")),
             body: Center(
                 child: Image.memory(
-              img.encodeJpg(capturedImage),
+              capturedImage,
               semanticLabel: "Quote screenshot",
             ))));
   }
@@ -100,59 +100,80 @@ class _QuotePageState extends State<QuotePage> {
               height: MediaQuery.of(context).size.height,
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      opacity: isBGImgOpaque ? 0.4 : 1.0,
-                      colorFilter: isBGImgOpaque & kIsWeb
-                          ? ColorFilter.mode(
-                              Colors.black.withOpacity(0.7), BlendMode.darken)
-                          : null,
-                      image: AssetImage(bookImg),
-                      fit: BoxFit.cover)),
+                      image: AssetImage(bookImg), fit: BoxFit.cover)),
               child: Semantics(
                 expanded: true,
                 liveRegion: true,
                 child: Column(
                   children: [
                     Expanded(
-                      child: isIconVisible
-                          ? Visibility(
-                              visible: isIconVisible,
-                              child: const AnimatedHandTouch(),
-                            )
-                          : FutureBuilder<List<Quote>>(
-                              future: futureQuotes,
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Semantics(
-                                    label: 'Loading',
-                                    textDirection: TextDirection.ltr,
-                                    excludeSemantics: true,
-                                    child: const Center(
-                                      child: CircularProgressIndicator(),
+                        child: isIconVisible
+                            ? Visibility(
+                                visible: isIconVisible,
+                                child: const AnimatedHandTouch(),
+                              )
+                            : Stack(
+                                alignment: AlignmentDirectional.center,
+                                children: [
+                                  ImageFiltered(
+                                    imageFilter: ImageFilter.blur(
+                                        sigmaX: 10.0,
+                                        sigmaY: 10.0,
+                                        tileMode: TileMode.decal),
+                                    child: Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 20, horizontal: 5),
+                                      decoration: shouldDisplay
+                                          ? BoxDecoration(
+                                              color: Colors.black54,
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(20)),
+                                              border: Border.all(
+                                                  color: Colors.transparent,
+                                                  width: 3.0),
+                                            )
+                                          : null,
                                     ),
-                                  );
-                                } else if (snapshot.hasError) {
-                                  return SingleQuote(
-                                    quote: getRandomQuote(backupQuotes),
-                                    shouldDisplay: shouldDisplay,
-                                    isOpaque: isOpaque,
-                                  );
-                                } else if (snapshot.hasData) {
-                                  return SingleQuote(
-                                    quote: getRandomQuote(snapshot.data!),
-                                    shouldDisplay: shouldDisplay,
-                                    isOpaque: isOpaque,
-                                  );
-                                } else {
-                                  return const Center(
-                                    child: Text(
-                                      'No data available',
-                                      textDirection: TextDirection.ltr,
-                                    ),
-                                  );
-                                }
-                              }),
-                    ),
+                                  ),
+                                  FutureBuilder<List<Quote>>(
+                                      future: futureQuotes,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return Semantics(
+                                            label: 'Loading',
+                                            textDirection: TextDirection.ltr,
+                                            excludeSemantics: true,
+                                            child: const Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            ),
+                                          );
+                                        } else if (snapshot.hasError) {
+                                          return SingleQuote(
+                                            quote: getRandomQuote(backupQuotes),
+                                            shouldDisplay: shouldDisplay,
+                                            isOpaque: isOpaque,
+                                          );
+                                        } else if (snapshot.hasData) {
+                                          return SingleQuote(
+                                            quote:
+                                                getRandomQuote(snapshot.data!),
+                                            shouldDisplay: shouldDisplay,
+                                            isOpaque: isOpaque,
+                                          );
+                                        } else {
+                                          return const Center(
+                                            child: Text(
+                                              'No data available',
+                                              textDirection: TextDirection.ltr,
+                                            ),
+                                          );
+                                        }
+                                      }),
+                                ],
+                              )),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 20),
                       child: Container(
@@ -217,15 +238,8 @@ class _QuotePageState extends State<QuotePage> {
   Future<Null> captureAndSaveImage(BuildContext context) {
     return screenshotController.capture().then((Uint8List? image) async {
       if (image != null) {
-        img.Image newImage = img.adjustColor(
-          img.decodeImage(image)!,
-          contrast: 1.1,
-          brightness: 0.9,
-          saturation: 0.9,
-        );
-
-        showCapturedImage(context, newImage);
-        await ImageGallerySaver.saveImage((img.encodeJpg(newImage)));
+        showCapturedImage(context, image);
+        await ImageGallerySaver.saveImage(image);
       }
     }).catchError((error) {
       print(error);

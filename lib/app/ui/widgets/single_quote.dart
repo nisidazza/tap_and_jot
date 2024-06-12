@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tap_and_jot/app/models/api_model.dart';
@@ -14,10 +12,6 @@ class SingleQuote extends StatelessWidget {
   final Quote quote;
   final bool shouldDisplay;
   final bool isOpaque;
-
-  getRandomQuote(List<Quote> data) {
-    return data[Random().nextInt(data.length)];
-  }
 
   @override
   Widget build(BuildContext context) {
