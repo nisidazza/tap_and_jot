@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tap_and_jot/app/models/api_model.dart';
 
-class SingleQuote extends StatelessWidget {
-  const SingleQuote(
+class QuoteAnimation extends StatelessWidget {
+  const QuoteAnimation(
       {super.key,
       required this.quote,
       required this.shouldDisplay,

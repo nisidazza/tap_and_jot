@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tap_and_jot/app/ui/screens/home_page.dart';
-import 'package:tap_and_jot/app/ui/screens/quote_page.dart';
+import 'package:tap_and_jot/app/ui/screens/quotes_page.dart';
 
 void main() {
   setUpAll(() {
@@ -38,7 +38,7 @@ void main() {
   testWidgets('Quote Screen meets a11y criteria', (WidgetTester tester) async {
     final SemanticsHandle handle = tester.ensureSemantics();
 
-    await tester.pumpWidget(const MaterialApp(home: QuotePage()));
+    await tester.pumpWidget(const MaterialApp(home: QuotesPage()));
 
     // Checks that tappable nodes have a minimum size of 48 by 48 pixels
     // for Android.
