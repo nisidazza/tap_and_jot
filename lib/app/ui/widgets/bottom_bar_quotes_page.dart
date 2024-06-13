@@ -1,10 +1,11 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:screenshot/screenshot.dart';
 
-class BottomBarQuotesPage extends StatelessWidget {
+class BottomBarQuotesPage extends StatefulWidget {
   const BottomBarQuotesPage(
       {super.key,
       required this.isIconVisible,
@@ -13,6 +14,11 @@ class BottomBarQuotesPage extends StatelessWidget {
   final bool isIconVisible;
   final ScreenshotController screenshotController;
 
+  @override
+  State<BottomBarQuotesPage> createState() => _BottomBarQuotesPageState();
+}
+
+class _BottomBarQuotesPageState extends State<BottomBarQuotesPage> {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
@@ -49,7 +55,7 @@ class BottomBarQuotesPage extends StatelessWidget {
                     semanticLabel: 'screenshot',
                   ),
                   onPressed: () {
-                    !isIconVisible ? captureAndSaveImage(context) : null;
+                    !widget.isIconVisible ? captureImage(context) : null;
                   },
                 ),
               )),
@@ -61,9 +67,33 @@ class BottomBarQuotesPage extends StatelessWidget {
   Future<dynamic> showCapturedImage(
       BuildContext context, Uint8List capturedImage) {
     return showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (context) => Scaffold(
-            appBar: AppBar(title: const Text("Captured widget screenshot")),
+            appBar: AppBar(
+              leading: IconButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  icon: const Icon(Icons.arrow_back,
+                      color: Colors.blueGrey, semanticLabel: 'back')),
+              actions: [
+                IconButton(
+                    onPressed: () => {
+                          ImageGallerySaver.saveImage(capturedImage),
+                          Future.delayed(const Duration(seconds: 2),
+                              () => Navigator.of(context).pop(true))
+                        },
+                    icon: const Icon(Icons.check_box,
+                        color: Colors.green, semanticLabel: 'save')),
+                IconButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    icon: const Icon(Icons.delete,
+                        color: Colors.red, semanticLabel: 'delete'))
+                // IconButton(
+                //     onPressed: null,
+                //     icon:  Icon(Icons.share,
+                //         color: Colors.blueGrey, semanticLabel: 'share'))
+              ],
+            ),
             body: Center(
                 child: Image.memory(
               capturedImage,
@@ -71,11 +101,10 @@ class BottomBarQuotesPage extends StatelessWidget {
             ))));
   }
 
-  Future<Null> captureAndSaveImage(BuildContext context) {
-    return screenshotController.capture().then((Uint8List? image) async {
+  Future<Null> captureImage(BuildContext context) {
+    return widget.screenshotController.capture().then((Uint8List? image) {
       if (image != null) {
         showCapturedImage(context, image);
-        await ImageGallerySaver.saveImage(image);
       }
     }).catchError((error) {
       print(error);
