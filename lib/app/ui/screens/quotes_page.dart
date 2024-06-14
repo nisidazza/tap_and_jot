@@ -64,59 +64,62 @@ class _QuotesPageState extends State<QuotesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Screenshot(
-        controller: screenshotController,
-        child: IgnorePointer(
-          ignoring: isIconVisible,
-          child: Semantics(
-            label: 'Quote Screen',
-            textDirection: TextDirection.ltr,
-            liveRegion: true,
-            button: true,
-            child: GestureDetector(
-              onTap: showQuoteOnTap,
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage(bookImg), fit: BoxFit.cover)),
-                child: Semantics(
-                  expanded: true,
-                  liveRegion: true,
-                  child: Column(
-                    children: [
-                      Expanded(
-                          child: isIconVisible
-                              ? Visibility(
-                                  visible: isIconVisible,
-                                  child: const AnimatedHandTouch(),
-                                )
-                              : Stack(
-                                  alignment: AlignmentDirectional.center,
-                                  children: [
-                                    BlurBackground(
-                                        shouldDisplay: shouldDisplay),
-                                    FutureBuilderQuotes(
-                                        futureQuotes: futureQuotes,
-                                        shouldDisplay: shouldDisplay,
-                                        isOpaque: isOpaque),
-                                  ],
-                                )),
-                    ],
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Scaffold(
+        body: Screenshot(
+          controller: screenshotController,
+          child: IgnorePointer(
+            ignoring: isIconVisible,
+            child: Semantics(
+              label: 'Quote Screen',
+              textDirection: TextDirection.ltr,
+              liveRegion: true,
+              button: true,
+              child: GestureDetector(
+                onTap: showQuoteOnTap,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(bookImg), fit: BoxFit.cover)),
+                  child: Semantics(
+                    expanded: true,
+                    liveRegion: true,
+                    child: Column(
+                      children: [
+                        Expanded(
+                            child: isIconVisible
+                                ? Visibility(
+                                    visible: isIconVisible,
+                                    child: const AnimatedHandTouch(),
+                                  )
+                                : Stack(
+                                    alignment: AlignmentDirectional.center,
+                                    children: [
+                                      BlurBackground(
+                                          shouldDisplay: shouldDisplay),
+                                      FutureBuilderQuotes(
+                                          futureQuotes: futureQuotes,
+                                          shouldDisplay: shouldDisplay,
+                                          isOpaque: isOpaque),
+                                    ],
+                                  )),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
           ),
         ),
+        bottomNavigationBar: BottomBarQuotesPage(
+            isIconVisible: isIconVisible,
+            screenshotController: screenshotController),
       ),
-      bottomNavigationBar: BottomBarQuotesPage(
-          isIconVisible: isIconVisible,
-          screenshotController: screenshotController),
     );
   }
 }
