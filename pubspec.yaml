@@ -39,6 +39,9 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_animated_icons: ^1.0.1
   lottie: ^1.4.3
+  screenshot: ^3.0.0
+  image_gallery_saver: ^2.0.3
+  permission_handler: ^11.3.1
 
 dev_dependencies:
   flutter_test:

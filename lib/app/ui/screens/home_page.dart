@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tap_and_jot/app/ui/screens/quote_page.dart';
+import 'package:tap_and_jot/app/ui/screens/quotes_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
 
   void goToQuote() {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const QuotePage()));
+        context, MaterialPageRoute(builder: (context) => const QuotesPage()));
   }
 
   @override
