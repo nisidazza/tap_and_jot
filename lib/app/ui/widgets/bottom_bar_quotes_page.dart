@@ -73,25 +73,18 @@ class _BottomBarQuotesPageState extends State<BottomBarQuotesPage> {
             appBar: AppBar(
               leading: IconButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  icon: const Icon(Icons.arrow_back,
-                      color: Colors.blueGrey, semanticLabel: 'back')),
+                  icon: const Icon(Icons.delete,
+                      color: Colors.red, semanticLabel: 'delete', size: 30)),
               actions: [
                 IconButton(
-                    onPressed: () => {
-                          ImageGallerySaver.saveImage(capturedImage),
-                          Future.delayed(const Duration(seconds: 2),
-                              () => Navigator.of(context).pop(true))
-                        },
-                    icon: const Icon(Icons.check_box,
-                        color: Colors.green, semanticLabel: 'save')),
-                IconButton(
-                    onPressed: () => Navigator.of(context).pop(true),
-                    icon: const Icon(Icons.delete,
-                        color: Colors.red, semanticLabel: 'delete'))
-                // IconButton(
-                //     onPressed: null,
-                //     icon:  Icon(Icons.share,
-                //         color: Colors.blueGrey, semanticLabel: 'share'))
+                  icon: const Icon(Icons.save_alt,
+                      color: Colors.green, semanticLabel: 'save', size: 30),
+                  onPressed: () => {
+                    ImageGallerySaver.saveImage(capturedImage),
+                    Future.delayed(const Duration(seconds: 1),
+                        () => Navigator.of(context).pop(true))
+                  },
+                ),
               ],
             ),
             body: Center(
