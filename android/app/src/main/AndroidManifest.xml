@@ -3,7 +3,7 @@
     <application
         android:label="Tap and Jot"
         android:name="${applicationName}"
-        android:icon="@mipmap/launcher_icon"
+        android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true"
         android:enableOnBackInvokedCallback="true"
         >
