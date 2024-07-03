@@ -1,0 +1,2 @@
+# any file with the extension .pbxproj should be treated as binary. 
+*.pbxproj binary merge=union
