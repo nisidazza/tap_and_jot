@@ -16,7 +16,8 @@ class BlurBackground extends StatelessWidget {
       imageFilter: ImageFilter.blur(
           sigmaX: 10.0, sigmaY: 10.0, tileMode: TileMode.decal),
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
+        width: MediaQuery.of(context).size.width * 0.9,
+        height: MediaQuery.of(context).size.height * 0.9,
         decoration: shouldDisplay
             ? BoxDecoration(
                 color: Colors.black54,
