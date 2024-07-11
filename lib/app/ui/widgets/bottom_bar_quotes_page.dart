@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
 
 class BottomBarQuotesPage extends StatelessWidget {
   const BottomBarQuotesPage(
@@ -69,19 +70,26 @@ class BottomBarQuotesPage extends StatelessWidget {
                 children: [
                   IconButton(
                       onPressed: () => Navigator.of(context).pop(true),
-                      icon: const Icon(Icons.delete,
-                          color: Colors.red,
-                          semanticLabel: 'delete',
-                          size: 30)),
+                      icon: const Icon(Icons.close,
+                          color: Colors.red, semanticLabel: 'close', size: 30)),
                   IconButton(
-                    icon: const Icon(Icons.save_alt,
-                        color: Colors.green, semanticLabel: 'save', size: 30),
                     onPressed: () => {
                       ImageGallerySaver.saveImage(image),
                       Future.delayed(const Duration(seconds: 1),
                           () => Navigator.of(context).pop(true))
                     },
+                    icon: const Icon(Icons.save_alt,
+                        color: Colors.green, semanticLabel: 'save', size: 30),
                   ),
+                  IconButton(
+                      onPressed: () => {
+                            Share.shareXFiles(
+                                [XFile.fromData(image, mimeType: 'png')])
+                          },
+                      icon: const Icon(Icons.share,
+                          color: Colors.blueGrey,
+                          semanticLabel: 'share',
+                          size: 30))
                 ],
               ),
             ),

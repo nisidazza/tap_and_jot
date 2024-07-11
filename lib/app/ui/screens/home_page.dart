@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tap_and_jot/app/ui/screens/quotes_page.dart';
@@ -74,78 +75,76 @@ class _HomePageState extends State<HomePage> {
                     opacity: 0.95,
                     image: AssetImage(getImage()),
                     fit: BoxFit.cover)),
-            child: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Padding(
-                        padding:
-                            const EdgeInsets.only(top: 60, left: 10, right: 10),
-                        child: Container(
-                          alignment: Alignment.topCenter,
-                          child: Semantics(
-                            liveRegion: true,
-                            label: getMessage(),
-                            textDirection: TextDirection.ltr,
-                            excludeSemantics: true,
-                            child: HomeText(
-                              text: getMessage(),
-                              fontSize: 40,
-                              fontWeight: FontWeight.w200,
-                            ),
-                          ),
-                        )),
-                  ),
-                  Expanded(
-                    child: Padding(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Padding(
                       padding:
-                          const EdgeInsets.only(top: 30, left: 10, right: 10),
+                          const EdgeInsets.only(top: 100, left: 20, right: 20),
                       child: Container(
-                        alignment: Alignment.center,
+                        alignment: Alignment.topCenter,
                         child: Semantics(
+                          liveRegion: true,
+                          label: getMessage(),
+                          textDirection: TextDirection.ltr,
                           excludeSemantics: true,
-                          child: const HomeText(
-                            text: "Tap & Jot!",
-                            fontSize: 75,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          child: HomeText(
+                              text: getMessage(),
+                              fontSize: 50,
+                              fontWeight: FontWeight.w200,
+                              maxLines: 2),
+                        ),
+                      )),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 30, left: 5, right: 20),
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: Semantics(
+                        excludeSemantics: true,
+                        child: const HomeText(
+                          text: "Tap & Jot!",
+                          fontSize: 100,
+                          fontWeight: FontWeight.w500,
+                          maxLines: 1,
                         ),
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: Container(
-                          alignment: Alignment.bottomCenter,
-                          child: Semantics(
-                            button: true,
-                            label: "Go to quote",
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Container(
+                        alignment: Alignment.bottomCenter,
+                        child: Semantics(
+                          button: true,
+                          label: "Go to quote",
+                          textDirection: TextDirection.ltr,
+                          child: Directionality(
                             textDirection: TextDirection.ltr,
-                            child: Directionality(
-                              textDirection: TextDirection.ltr,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    fixedSize: const Size(300, 80),
-                                    backgroundColor: Colors.transparent,
-                                    padding: const EdgeInsets.all(0.5)),
-                                onPressed: () {
-                                  goToQuote();
-                                },
-                                child: const Text("Go to quote",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.white,
-                                        fontSize: 20)),
-                              ),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  fixedSize: const Size(300, 80),
+                                  backgroundColor: Colors.transparent,
+                                  padding: const EdgeInsets.all(0.5)),
+                              onPressed: () {
+                                goToQuote();
+                              },
+                              child: const Text("Go to quote",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white,
+                                      fontSize: 20)),
                             ),
-                          )),
-                    ),
+                          ),
+                        )),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -159,27 +158,31 @@ class HomeText extends StatelessWidget {
       {super.key,
       required this.text,
       required this.fontSize,
-      required this.fontWeight});
+      required this.fontWeight,
+      required this.maxLines});
 
   final String text;
   final double fontSize;
   final FontWeight fontWeight;
+  final int maxLines;
 
   @override
   Widget build(BuildContext context) {
-    return Text(text,
-        textDirection: TextDirection.ltr,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontFamily: GoogleFonts.indieFlower().fontFamily,
-          fontWeight: fontWeight,
-          fontStyle: FontStyle.italic,
-          color: Colors.white,
-          fontSize: fontSize,
-          shadows: const [
-            Shadow(
-                color: Colors.black, blurRadius: 2.0, offset: Offset(2.0, 2.0))
-          ],
-        ));
+    return AutoSizeText(
+      text,
+      textDirection: TextDirection.ltr,
+      textAlign: TextAlign.center,
+      maxLines: maxLines,
+      style: TextStyle(
+        fontFamily: GoogleFonts.indieFlower().fontFamily,
+        fontWeight: fontWeight,
+        fontStyle: FontStyle.italic,
+        color: Colors.white,
+        fontSize: fontSize,
+        shadows: const [
+          Shadow(color: Colors.black, blurRadius: 2.0, offset: Offset(2.0, 2.0))
+        ],
+      ),
+    );
   }
 }
