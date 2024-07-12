@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,16 +8,21 @@ import 'package:tap_and_jot/app/models/api_model.dart';
 class QuoteAnimation extends StatelessWidget {
   const QuoteAnimation(
       {super.key,
-      required this.quote,
+      required this.quotes,
       required this.shouldDisplay,
       required this.isOpaque});
 
-  final Quote quote;
+  final List<Quote> quotes;
   final bool shouldDisplay;
   final bool isOpaque;
 
+  getRandomQuote(List<Quote> data) {
+    return data[Random().nextInt(data.length)];
+  }
+
   @override
   Widget build(BuildContext context) {
+    Quote quote = getRandomQuote(quotes);
     String? text = quote.text;
     String? authorName = quote.author.split(",").first;
     String author = authorName == "type.fit" ? "" : authorName;
@@ -30,7 +37,7 @@ class QuoteAnimation extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: AnimatedOpacity(
               opacity: isOpaque ? 1.0 : 0.0,
-              duration: const Duration(seconds: 2),
+              duration: const Duration(seconds: 3),
               child: Visibility(
                 visible: shouldDisplay,
                 child: Column(

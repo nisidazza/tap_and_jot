@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:tap_and_jot/app/data/backup_data.dart';
 import 'package:tap_and_jot/app/models/api_model.dart';
@@ -17,10 +15,7 @@ class FutureBuilderQuotes extends StatelessWidget {
   final bool shouldDisplay;
   final bool isOpaque;
 
-  getRandomQuote(List<Quote> data) {
-    return data[Random().nextInt(data.length)];
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Quote>>(
@@ -37,13 +32,13 @@ class FutureBuilderQuotes extends StatelessWidget {
             );
           } else if (snapshot.hasError) {
             return QuoteAnimation(
-              quote: getRandomQuote(backupQuotes),
+              quotes: backupQuotes,
               shouldDisplay: shouldDisplay,
               isOpaque: isOpaque,
             );
           } else if (snapshot.hasData) {
             return QuoteAnimation(
-              quote: getRandomQuote(snapshot.data!),
+              quotes: snapshot.data!,
               shouldDisplay: shouldDisplay,
               isOpaque: isOpaque,
             );
