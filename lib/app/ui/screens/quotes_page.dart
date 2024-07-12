@@ -17,16 +17,15 @@ class QuotesPage extends StatefulWidget {
   State<QuotesPage> createState() => _QuotesPageState();
 }
 
-class _QuotesPageState extends State<QuotesPage> {
+class _QuotesPageState extends State<QuotesPage> with TickerProviderStateMixin {
   bool shouldDisplay = false;
   bool isOpaque = false;
   bool isBGImgOpaque = false;
-  bool isIconVisible = true;
+  bool isHandIconVisible = true;
   String bookImg = 'assets/quote_BG.jpg';
   late Future<List<Quote>> futureQuotes;
-  Timer? iconVisibilityTimer;
-  bool _disposed = false;
   late Uint8List screenshotFile;
+  late AnimationController _touchHandController;
 
   ScreenshotController screenshotController = ScreenshotController();
 
@@ -34,32 +33,31 @@ class _QuotesPageState extends State<QuotesPage> {
   void initState() {
     super.initState();
     futureQuotes = fetchQuotes(http.Client());
-    iconVisibilityTimer = Timer(const Duration(seconds: 3), () {
-      if (!_disposed) {
-        setState(() {
-          isIconVisible = false;
-        });
-      }
-    });
-    // debugPrint("QuotesPage initState completed.");
+    _touchHandController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    _touchHandController.reset();
+    _touchHandController.forward();
   }
 
   @override
   void dispose() {
-    _disposed = true;
-    iconVisibilityTimer?.cancel();
-    // debugPrint("QuotesPage disposed and timer cancelled.");
+    _touchHandController.dispose();
     super.dispose();
   }
 
   void showQuoteOnTap() {
-    if (!_disposed) {
-      setState(() {
-        shouldDisplay = !shouldDisplay;
-        isOpaque = !isOpaque;
-        isBGImgOpaque = !isBGImgOpaque;
-      });
-    }
+    setState(() {
+      shouldDisplay = !shouldDisplay;
+      isOpaque = !isOpaque;
+      isBGImgOpaque = !isBGImgOpaque;
+    });
+  }
+
+  void hideHandIconAndShowQuote() {
+    setState(() {
+      isHandIconVisible = false;
+    });
+    showQuoteOnTap();
   }
 
   @override
@@ -69,47 +67,43 @@ class _QuotesPageState extends State<QuotesPage> {
       child: Scaffold(
         body: Screenshot(
           controller: screenshotController,
-          child: IgnorePointer(
-            ignoring: isIconVisible,
-            child: Semantics(
-              label: 'Quote Screen',
-              textDirection: TextDirection.ltr,
-              liveRegion: true,
-              button: true,
-              child: GestureDetector(
-                onTap: showQuoteOnTap,
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage(bookImg), fit: BoxFit.cover)),
-                  child: Semantics(
-                    expanded: true,
-                    liveRegion: true,
-                    child: Column(
-                      children: [
-                        Expanded(
-                            child: isIconVisible
-                                ? Visibility(
-                                    visible: isIconVisible,
-                                    child: const AnimatedHandTouch(),
-                                  )
-                                : Stack(
-                                    alignment: AlignmentDirectional.center,
-                                    children: [
-                                      BlurBackground(
-                                          shouldDisplay: shouldDisplay),
-                                      FutureBuilderQuotes(
-                                          futureQuotes: futureQuotes,
-                                          shouldDisplay: shouldDisplay,
-                                          isOpaque: isOpaque),
-                                    ],
-                                  )),
-                      ],
-                    ),
+          child: Semantics(
+            label: 'Quote Screen',
+            textDirection: TextDirection.ltr,
+            liveRegion: true,
+            button: true,
+            child: GestureDetector(
+              onTap: showQuoteOnTap,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage(bookImg), fit: BoxFit.cover)),
+                child: Semantics(
+                  expanded: true,
+                  liveRegion: true,
+                  child: Column(
+                    children: [
+                      Expanded(
+                          child: Stack(
+                        alignment: AlignmentDirectional.center,
+                        children: [
+                          Visibility(
+                              visible: isHandIconVisible,
+                              child: AnimatedHandTouch(
+                                  touchHandController: _touchHandController,
+                                  showQuote: hideHandIconAndShowQuote)),
+                          BlurBackground(shouldDisplay: shouldDisplay),
+                          FutureBuilderQuotes(
+                              futureQuotes: futureQuotes,
+                              shouldDisplay: shouldDisplay,
+                              isOpaque: isOpaque),
+                        ],
+                      )),
+                    ],
                   ),
                 ),
               ),
@@ -117,7 +111,7 @@ class _QuotesPageState extends State<QuotesPage> {
           ),
         ),
         bottomNavigationBar: BottomBarQuotesPage(
-            isIconVisible: isIconVisible,
+            isHandIconVisible: isHandIconVisible,
             screenshotController: screenshotController),
       ),
     );
