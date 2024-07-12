@@ -9,10 +9,10 @@ import 'package:share_plus/share_plus.dart';
 class BottomBarQuotesPage extends StatelessWidget {
   const BottomBarQuotesPage(
       {super.key,
-      required this.isIconVisible,
+      required this.isHandIconVisible,
       required this.screenshotController});
 
-  final bool isIconVisible;
+  final bool isHandIconVisible;
   final ScreenshotController screenshotController;
 
   @override
@@ -35,7 +35,7 @@ class BottomBarQuotesPage extends StatelessWidget {
                       semanticLabel: 'screenshot',
                     ),
                     onPressed: () {
-                      !isIconVisible ? captureImage(context) : null;
+                      !isHandIconVisible ? captureImage(context) : null;
                     },
                   ))),
         ],

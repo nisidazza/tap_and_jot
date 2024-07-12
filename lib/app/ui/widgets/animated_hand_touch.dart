@@ -2,31 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animated_icons/icons8.dart';
 import 'package:lottie/lottie.dart';
 
-class AnimatedHandTouch extends StatefulWidget {
-  const AnimatedHandTouch({super.key});
+class AnimatedHandTouch extends StatelessWidget {
+  const AnimatedHandTouch(
+      {super.key, required this.touchHandController, required this.showQuote});
 
-  @override
-  State<AnimatedHandTouch> createState() => _AnimatedHandTouch();
-}
-
-class _AnimatedHandTouch extends State<AnimatedHandTouch>
-    with TickerProviderStateMixin {
-  late AnimationController _touchHandController;
-
-  @override
-  void initState() {
-    super.initState();
-    _touchHandController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2));
-    _touchHandController.reset();
-    _touchHandController.forward();
-  }
-
-  @override
-  void dispose() {
-    _touchHandController.dispose();
-    super.dispose();
-  }
+  final AnimationController touchHandController;
+  final void Function() showQuote;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +23,7 @@ class _AnimatedHandTouch extends State<AnimatedHandTouch>
               textDirection: TextDirection.ltr,
               child: IconButton(
                   iconSize: 100,
-                  onPressed: () {},
+                  onPressed: showQuote,
                   icon: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ColorFiltered(
@@ -50,7 +31,7 @@ class _AnimatedHandTouch extends State<AnimatedHandTouch>
                             Colors.white, BlendMode.srcATop),
                         child: Lottie.asset(
                           Icons8.tap,
-                          controller: _touchHandController,
+                          controller: touchHandController,
                         ),
                       ))),
             ),

@@ -3,36 +3,32 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tap_and_jot/app/models/api_model.dart';
 import 'package:tap_and_jot/app/ui/widgets/quote_animation.dart';
 
-final Quote mockQuote = Quote(text: "first quote", author: "first author");
+final List<Quote> mockQuote = [
+  Quote(text: "first quote", author: "first author"),
+  Quote(text: "second quote", author: "second author"),
+  Quote(text: "third quote", author: "third author")
+];
 
 void main() {
   group("Single Quote Widget", () {
     testWidgets("it should display a quote when shouldDisplay is true",
         (widgetTester) async {
-      Widget quoteAnimation =
-          QuoteAnimation(quote: mockQuote, shouldDisplay: true, isOpaque: true);
+      Widget quoteAnimation = QuoteAnimation(
+          quotes: mockQuote, shouldDisplay: true, isOpaque: true);
 
       await widgetTester.pumpWidget(quoteAnimation);
 
-      final textFinder = find.text("first quote");
-      final authorFinder = find.text("first author");
-
-      expect(textFinder, findsOne);
-      expect(authorFinder, findsOne);
+      expect(find.byType(Text), findsExactly(2));
     });
 
     testWidgets("it should not display a quote when shouldDisplay is false",
         (widgetTester) async {
       Widget quoteAnimation = QuoteAnimation(
-          quote: mockQuote, shouldDisplay: false, isOpaque: true);
+          quotes: mockQuote, shouldDisplay: false, isOpaque: true);
 
       await widgetTester.pumpWidget(quoteAnimation);
 
-      final textFinder = find.text("first quote");
-      final authorFinder = find.text("first author");
-
-      expect(textFinder, findsNothing);
-      expect(authorFinder, findsNothing);
+      expect(find.byType(Text), findsNothing);
     });
   });
 }
