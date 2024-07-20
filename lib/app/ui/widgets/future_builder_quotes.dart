@@ -27,7 +27,7 @@ class FutureBuilderQuotes extends StatelessWidget {
               excludeSemantics: true,
               child: const Center(
                 child: CircularProgressIndicator(
-                  // dirty fix - TODO: fix progress indicator showing under hand icon
+                  // dirty fix - todo: fix progress indicator showing under hand icon
                   color: Colors.transparent),
               ),
             );
