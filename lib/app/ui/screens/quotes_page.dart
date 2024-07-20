@@ -50,14 +50,8 @@ class _QuotesPageState extends State<QuotesPage> with TickerProviderStateMixin {
       shouldDisplay = !shouldDisplay;
       isOpaque = !isOpaque;
       isBGImgOpaque = !isBGImgOpaque;
-    });
-  }
-
-  void hideHandIconAndShowQuote() {
-    setState(() {
       isHandIconVisible = false;
     });
-    showQuoteOnTap();
   }
 
   @override
@@ -95,7 +89,7 @@ class _QuotesPageState extends State<QuotesPage> with TickerProviderStateMixin {
                               visible: isHandIconVisible,
                               child: AnimatedHandTouch(
                                   touchHandController: _touchHandController,
-                                  showQuote: hideHandIconAndShowQuote)),
+                                  showQuote: showQuoteOnTap)),
                           BlurBackground(shouldDisplay: shouldDisplay),
                           FutureBuilderQuotes(
                               futureQuotes: futureQuotes,

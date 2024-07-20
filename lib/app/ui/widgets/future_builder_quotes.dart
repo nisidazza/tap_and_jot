@@ -15,7 +15,6 @@ class FutureBuilderQuotes extends StatelessWidget {
   final bool shouldDisplay;
   final bool isOpaque;
 
-  
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Quote>>(
@@ -27,7 +26,9 @@ class FutureBuilderQuotes extends StatelessWidget {
               textDirection: TextDirection.ltr,
               excludeSemantics: true,
               child: const Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  // dirty fix - TODO: fix progress indicator showing under hand icon
+                  color: Colors.transparent),
               ),
             );
           } else if (snapshot.hasError) {
