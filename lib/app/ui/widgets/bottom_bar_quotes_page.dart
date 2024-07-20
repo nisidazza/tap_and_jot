@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:tap_and_jot/app/ui/screens/about_page.dart';
 
 class BottomBarQuotesPage extends StatelessWidget {
   const BottomBarQuotesPage(
@@ -38,6 +39,22 @@ class BottomBarQuotesPage extends StatelessWidget {
                       !isHandIconVisible ? captureImage(context) : null;
                     },
                   ))),
+          Semantics(
+              button: true,
+              child: Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.description,
+                      color: Colors.white,
+                      size: 30,
+                      semanticLabel: 'description',
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const AboutPage()));
+                    },
+                  )))
         ],
       ),
     );
