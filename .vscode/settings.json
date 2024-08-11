@@ -1,4 +1,6 @@
 {
   "cmake.configureOnOpen": false,
-  "liveshare.accessibility.soundsEnabled": false
+  "liveshare.accessibility.soundsEnabled": false,
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "java.compile.nullAnalysis.mode": "disabled"
 }
