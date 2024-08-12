@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:screenshot/screenshot.dart';
@@ -23,126 +24,150 @@ class BottomBarQuotesPage extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          const HomeIconButton(),
-          Semantics(
-              button: true,
-              child: Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.photo_camera,
-                      color: Colors.white,
-                      size: 30,
-                      semanticLabel: 'screenshot',
-                    ),
-                    onPressed: () {
-                      !isHandIconVisible ? captureImage(context) : null;
-                    },
-                  ))),
-          Semantics(
-              button: true,
-              child: Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.description,
-                      color: Colors.white,
-                      size: 30,
-                      semanticLabel: 'description',
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const AboutPage()));
-                    },
-                  )))
+          _buildIconButton(
+              icon: Icons.home,
+              semanticLabel: 'home',
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+          _buildIconButton(
+              icon: Icons.photo_camera,
+              semanticLabel: 'screenshot',
+              onPressed: () {
+                !isHandIconVisible
+                    ? screenshotController
+                        .capture()
+                        .then((Uint8List? image) async {
+                        showScreenshot(context, image!);
+                      }).catchError((error) {
+                        print(error);
+                        _showErrorSnackBar(
+                            context, 'Failed to capture screenshot');
+                      })
+                    : null;
+              }),
+          _buildIconButton(
+            icon: Icons.description,
+            semanticLabel: 'description',
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const AboutPage()));
+            },
+          )
         ],
       ),
     );
   }
 
-  Future<dynamic> captureImage(BuildContext context) {
-    return screenshotController.capture().then((Uint8List? image) {
-      if (image != null) {
-        return showScreenshot(context, image);
-      }
-    }).catchError((error) {
-      print(error);
-    });
-  }
-
-  Future<dynamic> showScreenshot(BuildContext context, Uint8List image) {
-    return showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) => Dialog(
-          backgroundColor: Colors.white,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero,
-          ),
-          child: Column(mainAxisSize: MainAxisSize.max, children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 7),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                      onPressed: () => Navigator.of(context).pop(true),
-                      icon: const Icon(Icons.close,
-                          color: Colors.red, semanticLabel: 'close', size: 30)),
-                  IconButton(
-                    onPressed: () => {
-                      ImageGallerySaver.saveImage(image),
-                      Future.delayed(const Duration(seconds: 1),
-                          () => Navigator.of(context).pop(true))
-                    },
-                    icon: const Icon(Icons.save_alt,
-                        color: Colors.green, semanticLabel: 'save', size: 30),
-                  ),
-                  IconButton(
-                      onPressed: () => {
-                            Share.shareXFiles(
-                                [XFile.fromData(image, mimeType: 'png')])
-                          },
-                      icon: const Icon(Icons.share,
-                          color: Colors.blueGrey,
-                          semanticLabel: 'share',
-                          size: 30))
-                ],
-              ),
-            ),
-            Center(
-                child: Image.memory(
-              image,
-              semanticLabel: "Quote screenshot",
-            ))
-          ])),
-    );
-  }
-}
-
-class HomeIconButton extends StatelessWidget {
-  const HomeIconButton({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildIconButton({
+    required IconData icon,
+    required String semanticLabel,
+    required VoidCallback? onPressed,
+  }) {
     return Semantics(
       button: true,
       child: Directionality(
         textDirection: TextDirection.ltr,
         child: IconButton(
-          icon: const Icon(
-            Icons.home,
-            color: Colors.white,
-            size: 30,
-            semanticLabel: 'home',
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+            icon: Icon(
+              icon,
+              color: Colors.white,
+              size: 30,
+              semanticLabel: semanticLabel,
+            ),
+            onPressed: onPressed),
       ),
+    );
+  }
+
+  Future<dynamic> showScreenshot(BuildContext context, Uint8List image) {
+    return showDialog(
+        useSafeArea: false,
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => Dialog(
+            backgroundColor: Colors.white,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero,
+            ),
+            child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildDialogIconButton(
+                          icon: Icons.close,
+                          color: Colors.red,
+                          semanticLabel: 'close',
+                          onPressed: () => Navigator.of(context).pop(true)),
+                      _buildDialogIconButton(
+                          icon: Icons.save_alt,
+                          color: Colors.green,
+                          semanticLabel: 'save',
+                          onPressed: () => {
+                                ImageGallerySaver.saveImage(image),
+                                Future.delayed(const Duration(seconds: 1),
+                                    () => Navigator.of(context).pop(true))
+                              }),
+                      _buildDialogIconButton(
+                        icon: Icons.share,
+                        color: Colors.blueGrey,
+                        semanticLabel: 'share',
+                        onPressed: () => {
+                          Share.shareXFiles(
+                              [XFile.fromData(image, mimeType: 'png')])
+                        },
+                      )
+                    ],
+                  ),
+                  Center(
+                      child: Image.memory(
+                    image,
+                    semanticLabel: "Quote screenshot",
+                  )),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 5.0, vertical: 18.0),
+                    child: Semantics(
+                      label: "save or share screenshot",
+                      excludeSemantics: true,
+                      textDirection: TextDirection.ltr,
+                      child: const AutoSizeText(
+                          "Save or Share your favorite quote",
+                          maxLines: 1,
+                          minFontSize: 15,
+                          textDirection: TextDirection.ltr,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                          )),
+                    ),
+                  ),
+                ])));
+  }
+
+  Widget _buildDialogIconButton({
+    required IconData icon,
+    required Color color,
+    required String semanticLabel,
+    required VoidCallback onPressed,
+  }) {
+    return IconButton(
+      onPressed: onPressed,
+      icon: Icon(
+        icon,
+        color: color,
+        semanticLabel: semanticLabel,
+        size: 30,
+      ),
+    );
+  }
+
+  void _showErrorSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
     );
   }
 }
