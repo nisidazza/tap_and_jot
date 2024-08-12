@@ -58,33 +58,9 @@ class _FutureBuilderQuotesState extends State<FutureBuilderQuotes>
               ),
             );
           } else if (snapshot.hasError) {
-            return QuoteAnimation(
-              quotes: backupQuotes,
-              shouldDisplay: widget.shouldDisplay,
-              isOpaque: widget.isOpaque,
-            );
+            return _buildQuote(backupQuotes);
           } else if (snapshot.hasData) {
-            return Column(
-              children: [
-                Expanded(
-                    child: Stack(
-                  alignment: AlignmentDirectional.center,
-                  children: [
-                    Visibility(
-                        visible: widget.isHandIconVisible,
-                        child: AnimatedHandTouch(
-                            touchHandController: _touchHandController,
-                            showQuote: widget.showQuoteOnTap)),
-                    BlurBackground(shouldDisplay: widget.shouldDisplay),
-                    QuoteAnimation(
-                      quotes: snapshot.data!,
-                      shouldDisplay: widget.shouldDisplay,
-                      isOpaque: widget.isOpaque,
-                    ),
-                  ],
-                )),
-              ],
-            );
+            return _buildQuote(snapshot.data!);
           } else {
             return const Center(
               child: Text(
@@ -94,5 +70,29 @@ class _FutureBuilderQuotesState extends State<FutureBuilderQuotes>
             );
           }
         });
+  }
+
+  Widget _buildQuote(List<Quote> data) {
+    return Column(
+      children: [
+        Expanded(
+            child: Stack(
+          alignment: AlignmentDirectional.center,
+          children: [
+            Visibility(
+                visible: widget.isHandIconVisible,
+                child: AnimatedHandTouch(
+                    touchHandController: _touchHandController,
+                    showQuote: widget.showQuoteOnTap)),
+            BlurBackground(shouldDisplay: widget.shouldDisplay),
+            QuoteAnimation(
+              quotes: data,
+              shouldDisplay: widget.shouldDisplay,
+              isOpaque: widget.isOpaque,
+            ),
+          ],
+        )),
+      ],
+    );
   }
 }
