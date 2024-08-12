@@ -9,12 +9,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:tap_and_jot/app/ui/screens/about_page.dart';
 
 class BottomBarQuotesPage extends StatelessWidget {
-  const BottomBarQuotesPage(
-      {super.key,
-      required this.isHandIconVisible,
-      required this.screenshotController});
+  const BottomBarQuotesPage({super.key, required this.screenshotController});
 
-  final bool isHandIconVisible;
   final ScreenshotController screenshotController;
 
   @override
@@ -34,17 +30,12 @@ class BottomBarQuotesPage extends StatelessWidget {
               icon: Icons.photo_camera,
               semanticLabel: 'screenshot',
               onPressed: () {
-                !isHandIconVisible
-                    ? screenshotController
-                        .capture()
-                        .then((Uint8List? image) async {
-                        showScreenshot(context, image!);
-                      }).catchError((error) {
-                        print(error);
-                        _showErrorSnackBar(
-                            context, 'Failed to capture screenshot');
-                      })
-                    : null;
+                screenshotController.capture().then((Uint8List? image) async {
+                  showScreenshot(context, image!);
+                }).catchError((error) {
+                  print(error);
+                  _showErrorSnackBar(context, 'Failed to capture screenshot');
+                });
               }),
           _buildIconButton(
             icon: Icons.description,
