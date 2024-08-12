@@ -7,7 +7,7 @@ class AnimatedHandTouch extends StatelessWidget {
       {super.key, required this.touchHandController, required this.showQuote});
 
   final AnimationController touchHandController;
-  final void Function() showQuote;
+  final VoidCallback showQuote;
 
   @override
   Widget build(BuildContext context) {

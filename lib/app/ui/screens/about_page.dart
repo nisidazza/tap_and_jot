@@ -92,7 +92,7 @@ class _AboutPageState extends State<AboutPage> {
 class ButtonLink extends StatelessWidget {
   const ButtonLink({super.key, required this.launch, required this.text});
 
-  final void Function() launch;
+  final VoidCallback launch;
   final String text;
 
   @override
