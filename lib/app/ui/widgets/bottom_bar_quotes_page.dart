@@ -45,18 +45,6 @@ class _BottomBarQuotesPageState extends State<BottomBarQuotesPage> {
               onPressed: () async {
                 await showScreenshot(context);
               }),
-          // onPressed: () {
-          //   widget.screenshotController
-          //       .capture()
-          //       .then((Uint8List? image) async {
-          //     if (image != null) {
-          //       showScreenshot(context, image);
-          //     }
-          //   }).catchError((error) {
-          //     print(error);
-          //     _showErrorSnackBar(context, 'Failed to capture screenshot');
-          //   });
-          // }),
           _buildIconButton(
             icon: Icons.description,
             semanticLabel: 'description',
@@ -106,7 +94,7 @@ class _BottomBarQuotesPageState extends State<BottomBarQuotesPage> {
                   future: onImageCapture(context),
                   builder: (context, AsyncSnapshot<Uint8List?> snapshot) {
                     return snapshot.hasData
-                        ? _buildScreenshotDialog(context, snapshot.data)
+                        ? buildScreenshotDialog(context, snapshot.data)
                         : const Center(
                             child: CircularProgressIndicator(),
                           );
@@ -114,7 +102,28 @@ class _BottomBarQuotesPageState extends State<BottomBarQuotesPage> {
         });
   }
 
-  Column _buildScreenshotDialog(BuildContext context, Uint8List? image) {
+  Future<Uint8List?> onImageCapture(BuildContext context) async {
+    return await widget.screenshotController
+        .capture()
+        .then((Uint8List? image) async {
+      setState(() {
+        capturedImage = image;
+      });
+      return image;
+    }).catchError((error) async {
+      print(error);
+      showErrorSnackBar(context, 'Failed to capture screenshot');
+      return null;
+    });
+  }
+
+  void showErrorSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
+  Column buildScreenshotDialog(BuildContext context, Uint8List? image) {
     return Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -124,14 +133,14 @@ class _BottomBarQuotesPageState extends State<BottomBarQuotesPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildDialogIconButton(
+                buildDialogIconButton(
                     icon: Icons.close,
                     color: Colors.red,
                     semanticLabel: 'close',
                     onPressed: () => {
                           Navigator.of(context).pop(true),
                         }),
-                _buildDialogIconButton(
+                buildDialogIconButton(
                     icon: Icons.save_alt,
                     color: Colors.green,
                     semanticLabel: 'save',
@@ -140,7 +149,7 @@ class _BottomBarQuotesPageState extends State<BottomBarQuotesPage> {
                           Future.delayed(const Duration(seconds: 1),
                               () => Navigator.of(context).pop(true))
                         }),
-                _buildDialogIconButton(
+                buildDialogIconButton(
                   icon: Icons.share,
                   color: Colors.blueGrey,
                   semanticLabel: 'share',
@@ -192,22 +201,7 @@ class _BottomBarQuotesPageState extends State<BottomBarQuotesPage> {
         ]);
   }
 
-  Future<Uint8List?> onImageCapture(BuildContext context) async {
-    return await widget.screenshotController
-        .capture()
-        .then((Uint8List? image) async {
-      setState(() {
-        capturedImage = image;
-      });
-      return image;
-    }).catchError((error) async {
-      print(error);
-      _showErrorSnackBar(context, 'Failed to capture screenshot');
-      return null;
-    });
-  }
-
-  Widget _buildDialogIconButton({
+  Widget buildDialogIconButton({
     required IconData icon,
     required Color color,
     required String semanticLabel,
@@ -221,12 +215,6 @@ class _BottomBarQuotesPageState extends State<BottomBarQuotesPage> {
         semanticLabel: semanticLabel,
         size: 30,
       ),
-    );
-  }
-
-  void _showErrorSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
     );
   }
 }
