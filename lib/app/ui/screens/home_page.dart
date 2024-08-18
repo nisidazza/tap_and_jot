@@ -131,9 +131,7 @@ class _HomePageState extends State<HomePage> {
                                   fixedSize: const Size(300, 80),
                                   backgroundColor: Colors.transparent,
                                   padding: const EdgeInsets.all(0.5)),
-                              onPressed: () {
-                                goToQuote();
-                              },
+                              onPressed: goToQuote,
                               child: const Text("Go to quote",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,

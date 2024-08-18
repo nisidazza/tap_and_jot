@@ -5,14 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AboutPage extends StatefulWidget {
-  const AboutPage({super.key});
+class AboutPage extends StatelessWidget {
+  AboutPage({super.key});
 
-  @override
-  State<AboutPage> createState() => _AboutPageState();
-}
-
-class _AboutPageState extends State<AboutPage> {
   final Uri googlePlayStoreUrl = Uri.parse(
       "https://play.google.com/store/apps/details?id=com.nisiazza.tap_and_jot");
 

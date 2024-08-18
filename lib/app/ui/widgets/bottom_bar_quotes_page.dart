@@ -50,7 +50,7 @@ class _BottomBarQuotesPageState extends State<BottomBarQuotesPage> {
             semanticLabel: 'description',
             onPressed: () {
               Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const AboutPage()));
+                  MaterialPageRoute(builder: (context) =>  AboutPage()));
             },
           )
         ],

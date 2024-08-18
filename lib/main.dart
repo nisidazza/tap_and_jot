@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:tap_and_jot/app/providers/quotes_provider.dart';
 import 'package:tap_and_jot/app/ui/screens/home_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(const MyApp());
+  runApp(MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => QuotesProvider())],
+      child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

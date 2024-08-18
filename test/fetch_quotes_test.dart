@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:tap_and_jot/app/models/api_model.dart';
+import 'package:tap_and_jot/app/services/quotes_service.dart';
 
 import 'fetch_quotes_test.mocks.dart';
 
