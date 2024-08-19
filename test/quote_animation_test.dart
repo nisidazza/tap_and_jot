@@ -6,9 +6,9 @@ import 'package:tap_and_jot/app/providers/quotes_provider.dart';
 import 'package:tap_and_jot/app/ui/widgets/quote_animation.dart';
 
 final List<Quote> mockQuote = [
-  Quote(text: "first quote", author: "first author"),
-  Quote(text: "second quote", author: "second author"),
-  Quote(text: "third quote", author: "third author")
+  Quote(quote: "first quote", author: "first author"),
+  Quote(quote: "second quote", author: "second author"),
+  Quote(quote: "third quote", author: "third author")
 ];
 
 void main() {

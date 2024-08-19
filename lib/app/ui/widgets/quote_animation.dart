@@ -18,9 +18,9 @@ class QuoteAnimation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Quote quote = getRandomQuote(quotes);
-    String? text = quote.text;
-    String? authorName = quote.author.split(",").first;
+    Quote quoteObj = getRandomQuote(quotes);
+    String? text = quoteObj.quote;
+    String? authorName = quoteObj.author.split(",").first;
     String author = authorName == "type.fit" ? "" : authorName;
     return DefaultTextStyle(
         style:

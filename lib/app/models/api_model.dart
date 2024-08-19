@@ -1,19 +1,19 @@
 class Quote {
-  final String text;
+  final String quote;
   final String author;
 
   Quote({
-    required this.text,
+    required this.quote,
     required this.author,
   });
 
   factory Quote.fromJson(Map<String, dynamic> json) {
     if (json
         case {
-          'text': String text,
+          'quote': String quote,
           'author': String author,
         }) {
-      return Quote(text: text, author: author);
+      return Quote(quote: quote, author: author);
     } else {
       throw FormatException('Invalid JSON: $json');
     }
