@@ -4,8 +4,10 @@ import 'dart:typed_data';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:tap_and_jot/app/providers/quotes_provider.dart';
 import 'package:tap_and_jot/app/ui/screens/about_page.dart';
 
 class BottomBarQuotesPage extends StatefulWidget {
@@ -28,34 +30,37 @@ class _BottomBarQuotesPageState extends State<BottomBarQuotesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BottomAppBar(
-      color: Colors.black,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildIconButton(
-              icon: Icons.home,
-              semanticLabel: 'home',
+    return Consumer<QuotesProvider>(builder: (context, provider, child) {
+      return BottomAppBar(
+        color: Colors.black,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildIconButton(
+                icon: Icons.home,
+                semanticLabel: 'home',
+                onPressed: () {
+                  Navigator.pop(context);
+                  provider.resetToInitialState();
+                }),
+            _buildIconButton(
+                icon: Icons.photo_camera,
+                semanticLabel: 'screenshot',
+                onPressed: () async {
+                  await showScreenshot(context);
+                }),
+            _buildIconButton(
+              icon: Icons.description,
+              semanticLabel: 'description',
               onPressed: () {
-                Navigator.pop(context);
-              }),
-          _buildIconButton(
-              icon: Icons.photo_camera,
-              semanticLabel: 'screenshot',
-              onPressed: () async {
-                await showScreenshot(context);
-              }),
-          _buildIconButton(
-            icon: Icons.description,
-            semanticLabel: 'description',
-            onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) =>  AboutPage()));
-            },
-          )
-        ],
-      ),
-    );
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => AboutPage()));
+              },
+            )
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildIconButton({
