@@ -16,9 +16,6 @@ class _HomePageState extends State<HomePage> {
   String eveningImg = 'assets/evening.jpg';
   String nightImg = 'assets/night.jpg';
 
-  late String image;
-  late String message;
-
   @override
   void initState() {
     super.initState();
@@ -27,29 +24,27 @@ class _HomePageState extends State<HomePage> {
   String getImage() {
     var hour = DateTime.now().hour;
     if (hour < 12) {
-      image = morningImg;
+      return morningImg;
     } else if (hour >= 12 && hour < 17) {
-      image = afternoonImg;
+      return afternoonImg;
     } else if (hour >= 17 && hour < 21) {
-      image = eveningImg;
+      return eveningImg;
     } else {
-      image = nightImg;
+      return nightImg;
     }
-    return image;
   }
 
   String getMessage() {
     var hour = DateTime.now().hour;
     if (hour < 12) {
-      message = "Happy Morning to you!";
+      return "Happy Morning to you!";
     } else if (hour >= 12 && hour < 17) {
-      message = "How’s your day?";
+      return "How’s your day?";
     } else if (hour >= 17 && hour < 21) {
-      message = "Relax and unwind tonight!";
+      return "Relax and unwind tonight!";
     } else {
-      message = 'Good Vibes, Good Night!';
+      return 'Good Vibes, Good Night!';
     }
-    return message;
   }
 
   void goToQuote() {
