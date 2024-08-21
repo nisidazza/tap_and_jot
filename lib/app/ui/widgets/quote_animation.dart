@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:provider/provider.dart';
 import 'package:tap_and_jot/app/models/api_model.dart';
 import 'package:tap_and_jot/app/providers/quotes_provider.dart';
@@ -16,12 +17,29 @@ class QuoteAnimation extends StatelessWidget {
     return data[Random().nextInt(data.length)];
   }
 
+  capitalizeText(String text) {
+    List<String> sentences = text.split(".");
+
+    List<String> trimmedSentences =
+        sentences.map((sentence) => sentence.trim()).toList();
+
+    List<String> processedSentences = trimmedSentences.map((sentence) {
+      String lowerCaseSentence = sentence.toLowerCase();
+      String capitalizedSentence =
+          intl.toBeginningOfSentenceCase(lowerCaseSentence);
+      // Correct the case for the pronoun "I"
+      return capitalizedSentence.replaceAll(RegExp(r'\bi\b'), 'I');
+    }).toList();
+
+    return processedSentences.join(". ");
+  }
+
   @override
   Widget build(BuildContext context) {
     Quote quoteObj = getRandomQuote(quotes);
-    String? text = quoteObj.quote;
-    String? authorName = quoteObj.author.split(",").first;
-    String author = authorName == "type.fit" ? "" : authorName;
+    String capitalizedText = capitalizeText(quoteObj.quote);
+
+    String author = quoteObj.author;
     return DefaultTextStyle(
         style:
             const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
@@ -41,20 +59,24 @@ class QuoteAnimation extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Semantics(
-                          label: text,
-                          excludeSemantics: true,
-                          textDirection: TextDirection.ltr,
-                          child: AutoSizeText(text,
-                              maxLines: 3,
-                              textDirection: TextDirection.ltr,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontFamily: GoogleFonts.badScript().fontFamily,
-                                fontWeight: FontWeight.w500,
-                                fontStyle: FontStyle.italic,
-                                fontSize: 55,
-                              )),
+                        Flexible(
+                          child: Semantics(
+                            label: capitalizedText,
+                            excludeSemantics: true,
+                            textDirection: TextDirection.ltr,
+                            child: AutoSizeText(capitalizedText,
+                                maxLines: 6,
+                                minFontSize: 13,
+                                textDirection: TextDirection.ltr,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily:
+                                      GoogleFonts.badScript().fontFamily,
+                                  fontWeight: FontWeight.w500,
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 45,
+                                )),
+                          ),
                         ),
                         const SizedBox(height: 10),
                         Semantics(
