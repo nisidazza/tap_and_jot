@@ -13,7 +13,7 @@ final List<Quote> mockQuote = [
 
 void main() {
   group("Single Quote Widget", () {
-    testWidgets("it should display a quote when shouldDisplay is true",
+    testWidgets("it should display a quote when isQuoteVisible is true",
         (widgetTester) async {
       Widget quoteAnimation = QuoteAnimation(quotes: mockQuote);
 
@@ -26,7 +26,7 @@ void main() {
       expect(find.byType(Text), findsExactly(2));
     });
 
-    testWidgets("it should not display a quote when shouldDisplay is false",
+    testWidgets("it should not display a quote when isQuoteVisible is false",
         (widgetTester) async {
       Widget quoteAnimation = QuoteAnimation(quotes: mockQuote);
 

@@ -5,21 +5,21 @@ import 'package:tap_and_jot/app/services/quotes_service.dart';
 
 class QuotesProvider with ChangeNotifier {
   List<Quote> _quotes = [];
-  bool _shouldDisplay = false;
+  bool _isQuoteVisible = false;
   bool _isOpaque = false;
   bool _isHandIconVisible = true;
   bool _isLoading = false;
   String _errorMessage = '';
 
   List<Quote> get quotes => _quotes;
-  bool get shouldDisplay => _shouldDisplay;
+  bool get isQuoteVisible => _isQuoteVisible;
   bool get isOpaque => _isOpaque;
   bool get isHandIconVisible => _isHandIconVisible;
   bool get isLoading => _isLoading;
   String get errorMessage => _errorMessage;
 
   void showQuoteOnTap() {
-    _shouldDisplay = !_shouldDisplay;
+    _isQuoteVisible = !_isQuoteVisible;
     _isOpaque = !_isOpaque;
     _isHandIconVisible = false;
 
@@ -27,7 +27,7 @@ class QuotesProvider with ChangeNotifier {
   }
 
   void resetToInitialState() {
-    _shouldDisplay = false;
+    _isQuoteVisible = false;
     _isOpaque = false;
     _isHandIconVisible = true;
   }

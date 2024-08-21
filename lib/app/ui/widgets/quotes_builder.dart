@@ -58,7 +58,7 @@ class _QuotesBuilderState extends State<QuotesBuilder> {
         Visibility(
             visible: provider.isHandIconVisible,
             child: const AnimatedHandTouch()),
-        BlurBackground(shouldDisplay: provider.shouldDisplay),
+        BlurBackground(isQuoteVisible: provider.isQuoteVisible),
         QuoteAnimation(
           quotes: quotes,
         ),

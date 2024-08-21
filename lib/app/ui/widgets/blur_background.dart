@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 class BlurBackground extends StatelessWidget {
   const BlurBackground({
     super.key,
-    required this.shouldDisplay,
+    required this.isQuoteVisible,
   });
 
-  final bool shouldDisplay;
+  final bool isQuoteVisible;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class BlurBackground extends StatelessWidget {
       child: Container(
         width: MediaQuery.of(context).size.width * 0.9,
         height: MediaQuery.of(context).size.height * 0.9,
-        decoration: shouldDisplay
+        decoration: isQuoteVisible
             ? BoxDecoration(
                 color: Colors.black54,
                 borderRadius: const BorderRadius.all(Radius.circular(20)),

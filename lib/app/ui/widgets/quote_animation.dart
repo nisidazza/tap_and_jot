@@ -55,7 +55,7 @@ class QuoteAnimation extends StatelessWidget {
                   opacity: provider.isOpaque ? 1.0 : 0.0,
                   duration: const Duration(seconds: 3),
                   child: Visibility(
-                    visible: provider.shouldDisplay,
+                    visible: provider.isQuoteVisible,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
