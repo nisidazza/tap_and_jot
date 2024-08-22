@@ -33,4 +33,11 @@ class MockQuotesProvider extends Mock implements QuotesProvider {
       ], returnValueForMissingStub: [
         Quote(quote: 'Sample Quote', author: 'Author')
       ]);
+
+  @override
+  Future<void> fetchData() => super.noSuchMethod(
+        Invocation.method(#fetchData, []),
+        returnValue: Future<void>.value(),
+        returnValueForMissingStub: Future<void>.value(),
+      );
 }

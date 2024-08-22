@@ -124,14 +124,14 @@ class _HomePageState extends State<HomePage> {
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   fixedSize: const Size(300, 80),
-                                  backgroundColor: Colors.transparent,
+                                  backgroundColor: Colors.black45,
                                   padding: const EdgeInsets.all(0.5)),
                               onPressed: goToQuote,
                               child: const Text("Go to quote",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       color: Colors.white,
-                                      fontSize: 20)),
+                                      fontSize: 25)),
                             ),
                           ),
                         )),
