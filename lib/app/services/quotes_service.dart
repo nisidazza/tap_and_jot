@@ -14,7 +14,7 @@ Future<List<Quote>> fetchQuotes(http.Client client) async {
     if (response.statusCode == 200) {
       quotes = parseQuote(response.body);
     } else {
-      throw Exception("Failed to load answer");
+      throw Exception("We could not find the resource you requested.");
     }
   } catch (e) {
     print('Error occured $e');
