@@ -14,9 +14,10 @@ void main() {
         () async {
       final client = MockClient();
 
-      when(client.get(Uri.parse('https://type.fit/api/quotes'))).thenAnswer(
+      when(client.get(Uri.parse('https://dummyjson.com/quotes'))).thenAnswer(
           (_) async => http.Response(
-              '[{"text": "mock quote", "author": "mock author"}]', 200));
+              '{"quotes": [{"id": 1, "quote": "mock quote", "author": "mock author"}]}',
+              200));
 
       expect(await fetchQuotes(client), isA<List<Quote>>());
     });
@@ -24,7 +25,7 @@ void main() {
     test('throws an exception if the http call completes with an error', () {
       final client = MockClient();
 
-      when(client.get(Uri.parse('https://type.fit/api/quotes')))
+      when(client.get(Uri.parse('https://dummyjson.com/quotes')))
           .thenAnswer((_) async => http.Response('Not found', 404));
 
       expect(fetchQuotes(client), throwsException);

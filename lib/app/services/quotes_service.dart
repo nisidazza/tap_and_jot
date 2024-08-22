@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:core';
 
 import 'package:http/http.dart' as http;
 import 'package:tap_and_jot/app/models/api_model.dart';
@@ -16,17 +17,25 @@ Future<List<Quote>> fetchQuotes(http.Client client) async {
       throw Exception("Failed to load answer");
     }
   } catch (e) {
-    print('Error occured $e.toString()');
-    throw Exception('Error occured $e.toString()');
+    print('Error occured $e');
+    throw Exception('Error occured $e');
   }
   return quotes;
 }
 
 List<Quote> parseQuote(String responseBody) {
-  final parsedJson = jsonDecode(responseBody)['quotes'];
+  final Map<String, dynamic> parsedJson = jsonDecode(responseBody);
 
-  var result = parsedJson
-      .map<Quote>((json) => Quote.fromJson(json as Map<String, dynamic>))
-      .toList(); // map() returns an Iterable so we convert it to a List
-  return result;
+  if (parsedJson.containsKey('quotes')) {
+    if (parsedJson['quotes'] is List<dynamic>) {
+      var result = (parsedJson['quotes'] as List<dynamic>)
+          .map<Quote>((json) => Quote.fromJson(json as Map<String, dynamic>))
+          .toList(); // map() returns an Iterable so we convert it to a List
+      return result;
+    } else {
+      throw Exception("'quotes' is not a list");
+    }
+  } else {
+    throw Exception("Ket 'quotes' not found in the JSON response");
+  }
 }
