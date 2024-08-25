@@ -21,6 +21,8 @@ samples, guidance on mobile development, and a full API reference.
 
 Tap & Jot is a simple and elegant mobile application designed to provide you with a daily dose of inspiration through random quotes. Whether you're starting your day, taking a break, or winding down, Tap & Jot delivers uplifting and motivational quotes with just a tap.
 
+Now available on [Google Play Store](https://play.google.com/store/apps/details?id=com.nisiazza.tap_and_jot)
+
 ## Features
 
 ### Personalized Greeting
