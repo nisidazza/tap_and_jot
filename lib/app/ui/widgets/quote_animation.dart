@@ -11,13 +11,14 @@ import 'package:tap_and_jot/app/providers/quotes_provider.dart';
 class QuoteAnimation extends StatelessWidget {
   const QuoteAnimation({super.key, required this.quotes});
 
+
   final List<Quote> quotes;
 
-  getRandomQuote(List<Quote> data) {
+  Quote getRandomQuote(List<Quote> data) {
     return data[Random().nextInt(data.length)];
   }
 
-  capitalizeText(String text) {
+  String capitalizeText(String text) {
     List<String> sentences = text.split(".");
 
     List<String> trimmedSentences =
